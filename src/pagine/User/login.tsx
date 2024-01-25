@@ -1,32 +1,30 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Project, utente } from "../../logica/funzioni";
+import { utente } from "../../logica/funzioni";
 import Profile from "./profile";
-import Home from "../home";
 import Cookies from "js-cookie";
 const apiUrl = "http://localhost:5000/api/login_user";
 
+//funzione che controlla se l'utente è loggato e in chiama init per userData
 export function reload() {
   if (utente._id != "") return false;
-  // Verifica se ci sono dati dell'utente in localStorage
   const userData = localStorage.getItem("user");
   if (userData) {
-    // Inizializza l'oggetto utente con i dati presenti in localStorage
-
     init(JSON.parse(userData));
     console.log(utente);
     return false;
   }
   return true;
 }
-export const logout = () => {
-  // Esegui altre azioni di logout se necessario
 
+//funzione logOut
+export const logout = () => {
   utente._id = "";
   localStorage.removeItem("user");
   Cookies.remove("authToken");
 };
 
+//inizializza i dati dell'utente
 function init(e: any) {
   localStorage.setItem("user", JSON.stringify(e));
 
@@ -42,13 +40,13 @@ function init(e: any) {
   utente.username = e.username;
 }
 
+//componente Login
 function Login() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const titti = () => {
-    // Funzione asincrona per ottenere i dati e aggiornare lo stato
     const fetchData = async () => {
       try {
         const response = await axios.post(apiUrl, {
@@ -58,7 +56,6 @@ function Login() {
         console.log(response.data);
         if (response.data.message === "Login riuscito") {
           Cookies.set("authToken", response.data.token);
-
           init(response.data.user);
           setIsLoggedIn(true);
         }
@@ -69,19 +66,14 @@ function Login() {
         );
       }
     };
-
-    // Chiamata alla funzione asincrona
     fetchData();
   };
 
   useEffect(() => {
-    // Verifica se esiste il cookie authToken
-
     reload();
     const sessionTimeout = setTimeout(() => {
-      // Esegui il logout e rimuovi le informazioni dell'utente
       logout();
-    }, 60 * 1000);
+    }, 24 * 60 * 60 * 1000);
     return () => clearTimeout(sessionTimeout);
   }, []);
 

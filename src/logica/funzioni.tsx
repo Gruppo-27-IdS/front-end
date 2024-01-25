@@ -5,15 +5,12 @@ import Profile from "../pagine/User/profile";
 import Exp from "../pagine/explore";
 import Plus from "../pagine/plus";
 import My_proj from "../pagine/my_proj";
-import React, { Component } from "react";
-import ReactDOM from "react-dom/client";
+import React from "react";
 import { root } from "../main";
-import TopBar from "../pagine/top-bar";
-import Prova from "../components/dettagli_proj";
 import MyComponent from "../components/dettagli_proj";
 import Dettagli_prof from "../components/dettagli_prof";
-export let u_log = true;
 
+//creo la classe delle news
 export class News {
   news_data: string;
   news_title: string;
@@ -41,6 +38,7 @@ export class News {
   }
 }
 
+//creo la classe dei progetti
 export class Project {
   _id: string;
   name: string;
@@ -68,6 +66,7 @@ export class Project {
   }
 }
 
+//creo la classe utente
 class Utente {
   age: number;
   created: Date;
@@ -104,12 +103,14 @@ class Utente {
   }
 }
 
+//creo l'oggetto utente in cui verranno salvati i dati dell'utente loggato
 export let utente = new Utente(0, new Date(), "", "", "", "", "", "", 0, "");
 
 export const lista_progetti_esplora = [];
 
 export const lista_tuoi_progetti = [];
 
+//funzione che gestisce i bottoni della barra in fondo
 export const handleClick = (
   str: string,
   event: React.MouseEvent<HTMLDivElement>
@@ -190,6 +191,8 @@ export const handleClick = (
     );
   }
 };
+
+//funzione che renderizza la componente visualizza_progetto
 export const expand_proj = (id: Project, comp: JSX.Element) => {
   root.render(
     <>
@@ -197,6 +200,8 @@ export const expand_proj = (id: Project, comp: JSX.Element) => {
     </>
   );
 };
+
+//funzione che renderizza la componente visualizza_progetto
 export const show_profile = (id: number, comp: JSX.Element) => {
   root.render(
     <>
@@ -204,6 +209,7 @@ export const show_profile = (id: number, comp: JSX.Element) => {
     </>
   );
 };
+
 export const interaction = () => {};
 
 export const search_exp = () => {};
@@ -211,10 +217,3 @@ export const imp_filter = () => {};
 
 export const crea_proj = () => {};
 export const mod_profile = () => {};
-
-export const log_in = () => {
-  u_log = true;
-};
-export const log_out = () => {
-  u_log = false;
-};

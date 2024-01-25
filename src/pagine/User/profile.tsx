@@ -3,11 +3,13 @@ import { utente } from "../../logica/funzioni";
 import { root } from "../../main";
 import Home from "../home";
 
+//esegui il logout
 const handleLogOut = () => {
   logout();
   root.render(<Profile />);
 };
 
+//componente Profile
 function Profile() {
   return (
     <>
