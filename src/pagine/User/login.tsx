@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { utente } from "../../logica/funzioni";
 import Profile from "./profile";
 import Cookies from "js-cookie";
+import { root } from "../../main";
+import Create_profile from "./create_profile";
 const apiUrl = "http://localhost:5000/api/login_user";
 
 //funzione che controlla se l'utente è loggato e in chiama init per userData
@@ -25,7 +27,7 @@ export const logout = () => {
 };
 
 //inizializza i dati dell'utente
-function init(e: any) {
+export function init(e: any) {
   localStorage.setItem("user", JSON.stringify(e));
 
   utente._id = e._id;
@@ -46,7 +48,7 @@ function Login() {
   const [username, setUsername] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const titti = () => {
+  const log_in = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(apiUrl, {
@@ -60,10 +62,7 @@ function Login() {
           setIsLoggedIn(true);
         }
       } catch (error: any) {
-        console.error(
-          "Errore durante il recupero dei progetti:",
-          error.message
-        );
+        console.error("Errore durante il log-in:", error.message);
       }
     };
     fetchData();
@@ -116,9 +115,20 @@ function Login() {
             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
             href="#"
             role="button"
-            onClick={() => titti()}
+            onClick={() => log_in()}
           >
             <b>Login</b>
+          </a>
+          <p style={{ textAlign: "center" }}>o</p>
+          <a
+            className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
+            href="#"
+            role="button"
+            onClick={() => {
+              root.render(<Create_profile />);
+            }}
+          >
+            <b>Registrati</b>
           </a>
         </div>
       </div>
