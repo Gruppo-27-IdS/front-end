@@ -1,7 +1,7 @@
 import Home from "../pagine/home";
 import Notif from "../pagine/notification";
 import Message from "../pagine/message";
-import Profile from "../pagine/profile";
+import Profile from "../pagine/User/profile";
 import Exp from "../pagine/explore";
 import Plus from "../pagine/plus";
 import My_proj from "../pagine/my_proj";
@@ -42,66 +42,73 @@ export class News {
 }
 
 export class Project {
-  proj_data: string;
-  proj_title: string;
-  proj_description: string;
-  u_project: string;
-  u_name: string;
-  fproj_src: string;
-  g_proj: string[];
+  _id: string;
+  name: string;
+  description: string;
+  category: string;
+  start_date: Date;
+  end_date: Date;
+  opensource: Boolean;
   constructor(
-    u_project: string,
-    u_name: string,
-    title: string,
+    _id: string,
+    name: string,
     description: string,
-    data: string,
-    fprog_src: string,
-    f_news: string[]
+    category: string,
+    start_date: Date,
+    end_date: Date,
+    opensource: Boolean
   ) {
-    this.proj_data = data;
-    this.proj_title = title;
-    this.proj_description = description;
-    this.u_project = u_project;
-    this.u_name = u_name;
-    this.fproj_src = fprog_src;
-    this.g_proj = f_news;
+    this._id = _id;
+    (this.name = name),
+      (this.description = description),
+      (this.category = category),
+      (this.start_date = start_date),
+      (this.end_date = end_date);
+    this.opensource = opensource;
   }
 }
 
-export class Utente {
-  id: string;
-  livello: number; //-1->non loggato 0->loggato 1->supporter 2->collaboratore 3->manager
-  constructor(id: string, livello: number) {
-    this.id = id;
-    this.livello = livello;
+class Utente {
+  age: number;
+  created: Date;
+  email: string;
+  name: string;
+  password: string;
+  phone: string;
+  surname: string;
+  username: string;
+  __v: number;
+  _id: string; //-1->non loggato 0->loggato 1->supporter 2->collaboratore 3->manager
+  constructor(
+    age: number,
+    created: Date,
+    email: string,
+    name: string,
+    password: string,
+    phone: string,
+    surname: string,
+    username: string,
+    __v: number,
+    _id: string
+  ) {
+    this.age = age;
+    this.created = created;
+    this.email = email;
+    this.name = name;
+    this.password = password;
+    this.phone = phone;
+    this.surname = surname;
+    this.username = username;
+    this.__v = __v;
+    this._id = _id;
   }
 }
 
-export let utente = new Utente("", -1);
+export let utente = new Utente(0, new Date(), "", "", "", "", "", "", 0, "");
 
-export const lista_progetti_esplora = [
-  new Project(
-    "abc12",
-    "tony",
-    "progetto cupido",
-    "ahjahjhajhjhsjhjahjhjhjhhjhjkahjkhjkahjkhjkhjkahjkhjkhjkhhfjkhjkhjkhjk",
-    "23/01/2024",
-    "exmp_img/davideMoscardelli.jpg",
-    ["exmp_img/IMG_20221101_010102.jpg"]
-  ),
-];
+export const lista_progetti_esplora = [];
 
-export const lista_tuoi_progetti = [
-  new Project(
-    "def45",
-    "tony",
-    "progetto di prova",
-    "jdfj fjfrojf rijfirjfi rihfirjif fhrijfijr rhfihrfrn rifhrijfi rhifjfir",
-    "23/01/2024",
-    "exmp_img/davideMoscardelli.jpg",
-    []
-  ),
-];
+export const lista_tuoi_progetti = [];
 
 export const handleClick = (
   str: string,
@@ -114,17 +121,12 @@ export const handleClick = (
   clickedElement.classList.add("bg-hj");
 
   if (str === "home") {
-    if (u_log) {
-      const homeComponent = (
-        <>
-          <Home />
-        </>
-      );
-      root.render(homeComponent);
-    } else {
-      const homeComponent = <h1>coglione</h1>;
-      root.render(homeComponent);
-    }
+    const homeComponent = (
+      <>
+        <Home />
+      </>
+    );
+    root.render(homeComponent);
   } else if (str === "notif") {
     const homeComponent = (
       <>
@@ -188,7 +190,7 @@ export const handleClick = (
     );
   }
 };
-export const expand_proj = (id: string, comp: JSX.Element) => {
+export const expand_proj = (id: Project, comp: JSX.Element) => {
   root.render(
     <>
       <MyComponent parametroNumero={id} comp={comp} />

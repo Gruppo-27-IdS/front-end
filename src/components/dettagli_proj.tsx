@@ -11,7 +11,7 @@ import {
 import Manager_button from "./manager_menu";
 
 interface MyComponentProps {
-  parametroNumero: string;
+  parametroNumero: Project;
   comp: JSX.Element;
 }
 let l = ["ciao", "titti", "pluto"];
@@ -26,32 +26,19 @@ let tuo = false; //progetto presente nei tuoi (o manager o collaboratore)
 // rimuovi collaboratore, gestisci chat, definisci premi, modifica, elimina progetto, mostra richieste e premi raggiunti)
 
 function autenticazione_livello(str: string) {
-  if (utente.id === "y") return -1;
+  if (utente.username === "") return -1;
   else {
     if (str.length < 5) return 0;
-    else if (str.length === 5 && tuo) return 1;
-    else if (str.length > 5 && tuo && str.length < 8) return 2;
-    else if (str.length > 5 && tuo) return 3;
+    else if (str.length === 5) return 1;
+    else if (str.length > 5 && str.length < 8) return 2;
+    else if (str.length > 5) return 3;
     else return -1;
   }
 }
 
 const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
-  let progetto = new Project("", "", "", "", "", "", []);
+  let progetto = parametroNumero;
 
-  lista_progetti_esplora.forEach((element) => {
-    if (element.u_project === parametroNumero) {
-      progetto = element;
-      tuo = false;
-    }
-  });
-
-  lista_tuoi_progetti.forEach((element) => {
-    if (element.u_project === parametroNumero) {
-      progetto = element;
-      tuo = true;
-    }
-  });
   const livello = autenticazione_livello("12345678");
 
   return (
@@ -65,19 +52,19 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
       <div className="row row-cols-1 row-cols-md-1 g-4 jj">
         <div className="col">
           <div className=" mb-3 h-100">
-            <img
+            {/*<img
               src={progetto.g_proj.length > 0 ? progetto.g_proj[0] : ""}
               className="card-img-top"
               alt=""
-            />
+  />*/}
             <div className="card-body">
               <h5 className="card-title" style={{ fontSize: 25 }}>
-                {progetto.proj_title}
+                {progetto.name}
               </h5>
               <p className="news-text" style={{ fontSize: 20 }}>
-                {progetto.proj_description}
+                {progetto.description}
               </p>
-              <div
+              {/*<div
                 className={
                   progetto.g_proj.length === 0 ? "" : "image-scroll-container"
                 }
@@ -91,9 +78,9 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
                     key={x}
                   />
                 ))}
-              </div>
+              </div>*/}
               <p className="news-text">
-                Data di creazione: {progetto.proj_data}
+                Data di creazione: {progetto.category}
               </p>
               <p
                 className="news-text"
@@ -107,7 +94,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
                   )
                 }
               >
-                Creato da: @{progetto.u_name}
+                Creato da: @{progetto.name}
               </p>
               {livello < 0 ? (
                 <>

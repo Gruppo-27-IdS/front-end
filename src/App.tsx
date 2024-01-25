@@ -1,10 +1,13 @@
-import MyComponent3 from "./api/prova_api";
-import Titti from "./api/prova_api";
-import BottomNav from "./pagine/bot-top-nav";
-import Exp from "./pagine/explore";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Project from "./../../back-end/models/projects";
+import My_proj from "./pagine/my_proj";
 import Home from "./pagine/home";
-import TopBar from "./pagine/top-bar";
+import Login from "./pagine/User/login";
+const apiUrl = "http://localhost:5000/api/get_all_projects";
+
 function App() {
-  return <MyComponent3></MyComponent3>;
+  return <Home></Home>;
 }
+
 export default App;
