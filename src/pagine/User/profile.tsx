@@ -1,6 +1,7 @@
 import Login, { logout, reload } from "./login";
 import { root } from "../../main";
 import { utente } from "../../logica/funzioni";
+import Update_profile from "./update_profile";
 
 //esegui il logout
 const handleLogOut = () => {
@@ -27,7 +28,7 @@ function Profile() {
           <div className="d-flex justify-content-center bd-social">
             <a
               className="btn bg-color-mod white btn-mod d-flex justify-content-between"
-              href="#"
+              href="https://www.instagram.com/"
               role="button"
             >
               <svg
@@ -46,7 +47,7 @@ function Profile() {
             </a>
             <a
               className="btn bg-color-mod white btn-mod d-flex justify-content-between"
-              href="#"
+              href="https://www.linkedin.com/"
               role="button"
             >
               <svg
@@ -99,12 +100,13 @@ function Profile() {
               </p>
             </div>
           </div>
-          <div className="ls-bt">
+          <div className="ls-bt" style={{ paddingBottom: 70 }}>
             <div className="d-grid gap-3 ">
               <a
                 className="btn bg-color-mod white btn-mod-2 d-flex justify-content-between"
                 href="#"
                 role="button"
+                onClick={() => root.render(<Update_profile />)}
               >
                 <p></p>
                 <b>Modifica Profilo</b>

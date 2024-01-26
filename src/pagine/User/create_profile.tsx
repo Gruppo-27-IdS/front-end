@@ -53,9 +53,15 @@ function Create_profile() {
   };
   return (
     <>
+      <button
+        type="button"
+        className="btn-close p-10"
+        aria-label="Close"
+        onClick={() => root.render(<Profile />)}
+      ></button>
       <form className="row g-3 jj">
         <div className="col-md-6 ">
-          <label htmlFor="inputEmail4" className="form-label">
+          <label htmlFor="inputName" className="form-label">
             Nome
           </label>
           <input
@@ -66,7 +72,7 @@ function Create_profile() {
           />
         </div>
         <div className="col-md-6">
-          <label htmlFor="inputPassword4" className="form-label">
+          <label htmlFor="inputSurname" className="form-label">
             Cognome
           </label>
           <input
@@ -77,7 +83,7 @@ function Create_profile() {
           />
         </div>
         <div className="col-md-6 ">
-          <label htmlFor="inputEmail4" className="form-label">
+          <label htmlFor="inputUsername" className="form-label">
             Username
           </label>
           <input
@@ -88,7 +94,7 @@ function Create_profile() {
           />
         </div>
         <div className="col-md-6">
-          <label htmlFor="inputPassword4" className="form-label">
+          <label htmlFor="inputPhone" className="form-label">
             Telefono
           </label>
           <input
@@ -99,7 +105,7 @@ function Create_profile() {
           />
         </div>
         <div className="col-12">
-          <label htmlFor="inputPassword4" className="form-label">
+          <label htmlFor="inputPassword" className="form-label">
             Password
           </label>
           <input
@@ -110,7 +116,7 @@ function Create_profile() {
           />
         </div>
         <div className="col-12">
-          <label htmlFor="inputAddress" className="form-label">
+          <label htmlFor="inputEmail" className="form-label">
             Email
           </label>
           <input
@@ -122,7 +128,7 @@ function Create_profile() {
           />
         </div>
         <div className="col-md-2">
-          <label htmlFor="inputZip" className="form-label">
+          <label htmlFor="inputAge" className="form-label">
             Età
           </label>
           <input
