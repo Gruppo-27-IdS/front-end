@@ -202,10 +202,10 @@ export const expand_proj = (id: Project, comp: JSX.Element) => {
 };
 
 //funzione che renderizza la componente visualizza_progetto
-export const show_profile = (id: number, comp: JSX.Element) => {
+export const show_profile = (id: string, comp: JSX.Element) => {
   root.render(
     <>
-      <Dettagli_prof parametroNumero={id} comp={comp} />
+      <Dettagli_prof userName={id} comp={comp} />
     </>
   );
 };

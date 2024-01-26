@@ -86,7 +86,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
                 className="news-text"
                 onClick={() =>
                   show_profile(
-                    3,
+                    "3",
                     <MyComponent
                       parametroNumero={parametroNumero}
                       comp={comp}
