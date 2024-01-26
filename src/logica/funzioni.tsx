@@ -8,7 +8,7 @@ import My_proj from "../pagine/my_proj";
 import React from "react";
 import { root } from "../main";
 import MyComponent from "../components/dettagli_proj";
-import Dettagli_prof from "../components/dettagli_prof";
+import Dettagli_prof from "../pagine/User/dettagli_prof";
 
 //creo la classe delle news
 export class News {

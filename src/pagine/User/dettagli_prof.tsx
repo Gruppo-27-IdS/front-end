@@ -1,5 +1,5 @@
 import React from "react";
-import { root } from "../main";
+import { root } from "../../main";
 
 // Definisci un'interfaccia per le prop del tuo componente
 interface DettProfInt {
