@@ -28,7 +28,7 @@ function Update_profile() {
           age: age,
           phone: phone,
           email: email,
-          password: password,
+          password: pswNuova,
         });
 
         if (response.data.message === "User Updated Successfully") {
