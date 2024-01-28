@@ -36,7 +36,7 @@ function My_proj() {
             <div className="col" key={item._id}>
               <div
                 className="card mb-3 h-100"
-                onClick={() => expand_proj(item, <My_proj />)}
+                //onClick={() => expand_proj(item, <My_proj />)}
               >
                 {/*}
                 <img

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { root } from "../../main";
 import axios from "axios";
-import { utente } from "../../logica/funzioni";
 import Cookies from "js-cookie";
 const apiUrl = "http://localhost:5000/api/get_user_by_id";
 
-// Definisci un'interfaccia per le prop del tuo componente
 interface DettProfInt {
   userName: string;
   comp: JSX.Element;
@@ -19,14 +17,8 @@ interface User {
   phone: string;
   age: number;
 }
-// Crea il tuo componente utilizzando le prop definite nell'interfaccia
-const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
-  /*
-    Richiesta di visualizzare i dati del progetto relativi all'id passato
-    this.titolo=titolo
-    this.descrizione=descrizione
-  */
 
+const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
   const [user, setUser] = useState<User>({
     username: "",
     email: "",
@@ -42,7 +34,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
         const response = await axios.post(
           apiUrl,
           {
-            username: "65b2a7c8b999ab6d5e174a8d",
+            username: userName,
           },
           {
             headers: {

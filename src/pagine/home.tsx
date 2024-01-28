@@ -80,20 +80,7 @@ function Home() {
                   <p className="news-title">{item.news_title}</p>
                   <p
                     className="pro-tg"
-                    onClick={() =>
-                      expand_proj(
-                        new Project(
-                          "",
-                          "",
-                          "",
-                          "",
-                          new Date(),
-                          new Date(),
-                          false
-                        ),
-                        <Home />
-                      )
-                    }
+                    //</div>onClick={() => expand_proj(<Home />)}
                   >
                     @{item.u_project}
                   </p>

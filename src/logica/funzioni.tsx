@@ -106,8 +106,6 @@ class Utente {
 //creo l'oggetto utente in cui verranno salvati i dati dell'utente loggato
 export let utente = new Utente(0, new Date(), "", "", "", "", "", "", 0, "");
 
-export const lista_progetti_esplora = [];
-
 export const lista_tuoi_progetti = [];
 
 //funzione che gestisce i bottoni della barra in fondo
@@ -193,7 +191,7 @@ export const handleClick = (
 };
 
 //funzione che renderizza la componente visualizza_progetto
-export const expand_proj = (id: Project, comp: JSX.Element) => {
+export const expand_proj = (id: string, comp: JSX.Element) => {
   root.render(
     <>
       <MyComponent parametroNumero={id} comp={comp} />

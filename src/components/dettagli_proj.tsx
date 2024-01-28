@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { root } from "../main";
 import My_proj from "../pagine/my_proj";
-import {
-  Project,
-  lista_progetti_esplora,
-  lista_tuoi_progetti,
-  show_profile,
-  utente,
-} from "../logica/funzioni";
+import { show_profile, utente } from "../logica/funzioni";
 import Manager_button from "./manager_menu";
+import axios from "axios";
+import Cookies from "js-cookie";
+
+const apiUrl = "http://localhost:5000/api/get_proj_by_id";
 
 interface MyComponentProps {
-  parametroNumero: Project;
+  parametroNumero: string;
   comp: JSX.Element;
+}
+interface proj {
+  _id: string;
+  name: string;
+  description: string;
+  category: string;
+  start_date: Date;
+  end_date: Date;
+  opensource: boolean;
+  images: string[];
+  __v: number;
 }
 let l = ["ciao", "titti", "pluto"];
 let premi = ["premio 1", "premio 2", "premio 3"];
@@ -37,10 +46,56 @@ function autenticazione_livello(str: string) {
 }
 
 const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
-  let progetto = parametroNumero;
+  //let progetto = parametroNumero;
 
   const livello = autenticazione_livello("12345678");
+  const [project, setProject] = useState<proj>({
+    _id: "",
+    name: "",
+    description: "",
+    category: "",
+    start_date: new Date(),
+    end_date: new Date(),
+    opensource: false,
+    images: [],
+    __v: 0,
+  });
 
+  const get_dati = () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          apiUrl,
+          {
+            project_id: parametroNumero,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+        setProject({
+          _id: response.data.project._id,
+          name: response.data.project.name,
+          description: response.data.project.description,
+          category: response.data.project.category,
+          start_date: response.data.project.start_date,
+          end_date: response.data.project.end_date,
+          opensource: response.data.project.opensource,
+          images: response.data.project.images,
+          __v: response.data.project.__v,
+        });
+      } catch (error: any) {
+        console.error("Errore durante il recupero dei dati:", error.message);
+      }
+    };
+    fetchData();
+  };
+
+  useEffect(() => {
+    get_dati();
+  }, []);
   return (
     <>
       <button
@@ -52,36 +107,36 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
       <div className="row row-cols-1 row-cols-md-1 g-4 jj">
         <div className="col">
           <div className=" mb-3 h-100">
-            {/*<img
-              src={progetto.g_proj.length > 0 ? progetto.g_proj[0] : ""}
+            <img
+              src={project.images.length > 0 ? project.images[0] : ""}
               className="card-img-top"
               alt=""
-  />*/}
+            />
             <div className="card-body">
               <h5 className="card-title" style={{ fontSize: 25 }}>
-                {progetto.name}
+                {project.name}
               </h5>
               <p className="news-text" style={{ fontSize: 20 }}>
-                {progetto.description}
+                {project.description}
               </p>
-              {/*<div
+              <div
                 className={
-                  progetto.g_proj.length === 0 ? "" : "image-scroll-container"
+                  project.images.length === 0 ? "" : "image-scroll-container"
                 }
               >
-                {progetto.g_proj.map((x) => (
+                {project.images.map((x) => (
                   <img
-                    src={x}
+                    src={
+                      "http://localhost:5000/back-end/projects_images/1706195065058_.jpg"
+                    }
                     className="card-img-top k"
                     height="250px"
                     alt="..."
                     key={x}
                   />
                 ))}
-              </div>*/}
-              <p className="news-text">
-                Data di creazione: {progetto.category}
-              </p>
+              </div>
+              <p className="news-text">Data di creazione: {project.category}</p>
               <p
                 className="news-text"
                 onClick={() =>
@@ -94,7 +149,8 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
                   )
                 }
               >
-                Creato da: @{progetto.name}
+                {/*MANCA NOME MANAGER */}
+                Creato da: @{project.name}
               </p>
               {livello < 0 ? (
                 <>

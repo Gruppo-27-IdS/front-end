@@ -1,11 +1,44 @@
-import {
-  expand_proj,
-  lista_progetti_esplora,
-  Project,
-} from "../logica/funzioni";
+import { useState } from "react";
+import { expand_proj, Project } from "../logica/funzioni";
 import TopBar from "./top-bar";
-
+import axios from "axios";
+import Cookies from "js-cookie";
+const apiUrl2 = "http://localhost:5000/api/get_proj_by_name";
+interface proj {
+  _id: string;
+  name: string;
+  description: string;
+  category: string;
+  start_date: Date;
+  end_date: Date;
+  opensource: boolean;
+}
 function Exp() {
+  const [projectList, setProjectList] = useState<proj[]>([]);
+  const [ricerca, setRicerca] = useState("");
+  const search = () => {
+    setProjectList([]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          apiUrl2,
+          {
+            project_name: ricerca,
+            //manager: ricerca,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+        setProjectList(response.data);
+      } catch (error: any) {
+        console.error("Errore durante il recupero dei dati:", error.message);
+      }
+    };
+    fetchData();
+  };
   return (
     <>
       <div id="explore">
@@ -17,11 +50,12 @@ function Exp() {
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
+                onChange={(e) => setRicerca(e.target.value)}
               />
               <button
                 className="btn bg-color-mod white"
                 style={{ marginRight: 5 }}
-                type="submit"
+                onClick={() => search()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -49,34 +83,33 @@ function Exp() {
             </form>
           </div>
         </nav>
-        <div className="row row-cols-1 row-cols-md-2 g-4 jj">
-          {lista_progetti_esplora.map((item) => (
-            <div className="col" key={item.u_project}>
+        <div
+          className="row row-cols-1 row-cols-md-2 g-4 jj"
+          style={{ paddingTop: 10 }}
+        >
+          {projectList.map((item) => (
+            <div className="col" key={item._id}>
               <div
                 className="card mb-3 h-100"
-                onClick={() => expand_proj(item.u_project, <Exp />)}
+                onClick={() => expand_proj(item._id, <Exp />)}
               >
-                <img
-                  src={item.g_proj.length > 0 ? item.g_proj[0] : ""}
-                  className="card-img-top"
-                  alt=""
-                />
+                <img src="" className="card-img-top" alt="" />
                 <div className="card-body">
                   <h5 className="card-title" style={{ fontSize: 25 }}>
-                    {item.proj_title}
+                    {item.name}
                   </h5>
                   <p
                     className="news-text text-truncate"
                     style={{ fontSize: 20 }}
                   >
-                    {item.proj_description}
+                    {item.description}
                   </p>
                   <p className="news-text sticky-bottom">
                     <small
                       className="text-body-secondary "
                       style={{ fontSize: 15 }}
                     >
-                      {item.proj_data}
+                      {item.category}
                     </small>
                   </p>
                 </div>
