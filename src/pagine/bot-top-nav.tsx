@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 import { useEffect } from "react";
 import TopBar from "./top-bar";
 import { handleClick } from "../logica/funzioni";
-import Profile from "./profile";
+import Profile from "./User/profile";
 import Exp from "./explore";
 import Plus from "./plus";
 import My_proj from "./my_proj";
