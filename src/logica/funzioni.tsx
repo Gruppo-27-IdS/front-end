@@ -1,10 +1,10 @@
-import Home from "../pagine/home";
+import Home from "../pagine/News/home";
 import Notif from "../pagine/notification";
 import Message from "../pagine/message";
 import Profile from "../pagine/User/profile";
-import Exp from "../pagine/explore";
-import Plus from "../pagine/plus";
-import My_proj from "../pagine/my_proj";
+import Exp from "../pagine/Projects/explore";
+import Plus from "../pagine/Projects/plus";
+import My_proj from "../pagine/Projects/my_proj";
 import React from "react";
 import { root } from "../main";
 import MyComponent from "../components/dettagli_proj";

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
-import { alert_butt, expand_proj, Project, utente } from "../logica/funzioni";
-import TopBar from "./top-bar";
+import {
+  alert_butt,
+  expand_proj,
+  Project,
+  utente,
+} from "../../logica/funzioni";
+import TopBar from "../top-bar";
 import axios from "axios";
 import Cookies from "js-cookie";
 const apiUrl1 = "http://localhost:5000/api/explore_projects";

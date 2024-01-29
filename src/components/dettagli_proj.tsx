@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { root } from "../main";
-import My_proj from "../pagine/my_proj";
+import My_proj from "../pagine/Projects/my_proj";
 import { show_profile, utente } from "../logica/funzioni";
 import Manager_button from "./manager_menu";
 import axios from "axios";

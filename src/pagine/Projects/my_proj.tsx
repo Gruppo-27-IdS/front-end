@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Project, expand_proj, lista_tuoi_progetti } from "../logica/funzioni";
-import TopBar from "./top-bar";
-const apiUrl = "http://localhost:5000/api/get_all_projects";
+import { Project, expand_proj, utente } from "../../logica/funzioni";
+import Cookies from "js-cookie";
+const apiUrl = "http://localhost:5000/api/get_proj_created";
 
 function My_proj() {
   const [lista_tuoi_progetti, setProjects] = useState<Project[]>([]);
@@ -11,8 +11,19 @@ function My_proj() {
     // Funzione asincrona per ottenere i dati e aggiornare lo stato
     const fetchData = async () => {
       try {
-        const response = await axios.get(apiUrl);
-        console.log(response.data);
+        const response = await axios.post(
+          apiUrl,
+          {
+            user_id: utente._id,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+        console.log(response);
+        console.log(utente._id);
         setProjects(response.data);
       } catch (error: any) {
         console.error(
@@ -36,7 +47,7 @@ function My_proj() {
             <div className="col" key={item._id}>
               <div
                 className="card mb-3 h-100"
-                //onClick={() => expand_proj(item, <My_proj />)}
+                onClick={() => expand_proj(item._id, <My_proj />)}
               >
                 {/*}
                 <img

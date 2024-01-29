@@ -1,3 +1,4 @@
+import { expand_proj } from "../../logica/funzioni";
 import { root } from "../../main";
 
 interface DettProfInt {
@@ -33,7 +34,9 @@ const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
             <div className="col" key={item._id}>
               <div
                 className="card mb-3 h-100"
-                //onClick={() => expand_proj(item, <My_proj />)}
+                onClick={() =>
+                  expand_proj(item._id, <Proj_prof list={list} comp={comp} />)
+                }
               >
                 {/*}
                   <img
