@@ -203,15 +203,11 @@ export const expand_proj = (id: string, comp: JSX.Element) => {
 export const show_profile = (id: string, comp: JSX.Element) => {
   root.render(
     <>
-      <Dettagli_prof userName={id} comp={comp} />
+      <Dettagli_prof id={id} comp={comp} />
     </>
   );
 };
 
-export const interaction = () => {};
-
-export const search_exp = () => {};
-export const imp_filter = () => {};
-
-export const crea_proj = () => {};
-export const mod_profile = () => {};
+export const alert_butt = () => {
+  alert("funzione non ancora implementata");
+};

@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { expand_proj, Project } from "../logica/funzioni";
+import { useEffect, useState } from "react";
+import { alert_butt, expand_proj, Project, utente } from "../logica/funzioni";
 import TopBar from "./top-bar";
 import axios from "axios";
 import Cookies from "js-cookie";
+const apiUrl1 = "http://localhost:5000/api/explore_projects";
 const apiUrl2 = "http://localhost:5000/api/get_proj_by_name";
 interface proj {
   _id: string;
@@ -16,6 +17,29 @@ interface proj {
 function Exp() {
   const [projectList, setProjectList] = useState<proj[]>([]);
   const [ricerca, setRicerca] = useState("");
+  const getDati = () => {
+    setProjectList([]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          apiUrl1,
+          {
+            user_id: utente._id,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+        setProjectList(response.data);
+      } catch (error: any) {
+        console.error("Errore durante il recupero dei dati:", error.message);
+      }
+    };
+    fetchData();
+  };
+
   const search = () => {
     setProjectList([]);
     const fetchData = async () => {
@@ -39,6 +63,10 @@ function Exp() {
     };
     fetchData();
   };
+  useEffect(() => {
+    getDati();
+  }, []);
+
   return (
     <>
       <div id="explore">
@@ -68,7 +96,7 @@ function Exp() {
                   <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                 </svg>
               </button>
-              <button className="btn bg-color-mod white" type="submit">
+              <button className="btn bg-color-mod white" onClick={alert_butt}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
