@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { root } from "../main";
-import My_proj from "../pagine/my_proj";
+import My_proj from "../pagine/Projects/my_proj";
 import { show_profile, utente } from "../logica/funzioni";
 import Manager_button from "./manager_menu";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Crea_news from "../pagine/News/crea_news";
 
 const apiUrl = "http://localhost:5000/api/get_proj_by_id";
 
@@ -75,6 +76,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
             },
           }
         );
+        console.log(parametroNumero);
         setProject({
           _id: response.data.project._id,
           name: response.data.project.name,
@@ -240,6 +242,19 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
                         className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
                         href="#"
                         role="button"
+                        onClick={() =>
+                          root.render(
+                            <Crea_news
+                              inputString={project._id}
+                              comp={
+                                <MyComponent
+                                  parametroNumero={parametroNumero}
+                                  comp={comp}
+                                />
+                              }
+                            />
+                          )
+                        }
                       >
                         <b>Crea News</b>
                       </a>

@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { root } from "../../main";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Proj_prof from "./proj_prof";
+import { alert_butt } from "../../logica/funzioni";
 const apiUrl = "http://localhost:5000/api/get_user_by_id";
+let apiUrl1 = "http://localhost:5000/api/get_followed_projects";
+let apiUrl2 = "http://localhost:5000/api/get_proj_created";
 
 interface DettProfInt {
-  userName: string;
+  id: string;
   comp: JSX.Element;
 }
 
@@ -17,8 +21,17 @@ interface User {
   phone: string;
   age: number;
 }
+interface proj {
+  _id: string;
+  name: string;
+  description: string;
+  category: string;
+  start_date: Date;
+  end_date: Date;
+  opensource: boolean;
+}
 
-const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
+const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
   const [user, setUser] = useState<User>({
     username: "",
     email: "",
@@ -27,6 +40,53 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
     phone: "",
     age: 0,
   });
+  const [projectList2, setProjectList2] = useState<proj[]>([]);
+  const [projectList, setProjectList] = useState<proj[]>([]);
+  const [NumprojectList2, setNumProjectList2] = useState(0);
+  const [NumprojectList, setNumProjectList] = useState(0);
+  const getDati = () => {
+    setProjectList([]);
+    setProjectList2([]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          apiUrl1,
+          {
+            user_id: id,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+        setProjectList(response.data);
+        const response2 = await axios.post(
+          apiUrl2,
+          {
+            user_id: id,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+        setProjectList2(response.data);
+        setNumProjectList(response.data.length);
+        setNumProjectList2(response2.data.length);
+
+        localStorage.setItem("NumprojectList", response.data.length.toString());
+        localStorage.setItem(
+          "NumprojectList2",
+          response2.data.length.toString()
+        );
+      } catch (error: any) {
+        console.error("Errore durante il recupero dei dati:", error.message);
+      }
+    };
+    fetchData();
+  };
 
   const get_dati = () => {
     const fetchData = async () => {
@@ -34,7 +94,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
         const response = await axios.post(
           apiUrl,
           {
-            username: userName,
+            id: id,
           },
           {
             headers: {
@@ -58,7 +118,18 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
   };
 
   useEffect(() => {
+    const savedNumProjectList = localStorage.getItem("NumprojectList");
+    const savedNumProjectList2 = localStorage.getItem("NumprojectList2");
+
+    if (savedNumProjectList) {
+      setNumProjectList(Number(savedNumProjectList));
+    }
+
+    if (savedNumProjectList2) {
+      setNumProjectList2(Number(savedNumProjectList2));
+    }
     get_dati();
+    getDati();
   }, []);
 
   return (
@@ -121,9 +192,19 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
         className="dati-profilo d-flex justify-content-between"
         style={{ marginBottom: 50 }}
       >
-        <div className="dati-profilo-item">
+        <div
+          className="dati-profilo-item"
+          onClick={() =>
+            root.render(
+              <Proj_prof
+                list={projectList2}
+                comp={<Dettagli_prof id={id} comp={comp} />}
+              />
+            )
+          }
+        >
           <div className="dati-profilo-numero">
-            <b>8</b>
+            <b>{NumprojectList2}</b>
           </div>
           <p style={{ fontSize: 15 }}>
             <b>
@@ -131,9 +212,19 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
             </b>
           </p>
         </div>
-        <div className="dati-profilo-item">
+        <div
+          className="dati-profilo-item"
+          onClick={() =>
+            root.render(
+              <Proj_prof
+                list={projectList}
+                comp={<Dettagli_prof id={id} comp={comp} />}
+              />
+            )
+          }
+        >
           <div className="dati-profilo-numero">
-            <b>65</b>
+            <b>{NumprojectList}</b>
           </div>
           <p style={{ fontSize: 15 }}>
             <b>
@@ -141,7 +232,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ userName, comp }) => {
             </b>
           </p>
         </div>
-        <div className="dati-profilo-item">
+        <div className="dati-profilo-item" onClick={alert_butt}>
           <div className="dati-profilo-numero">
             <b>4</b>
           </div>

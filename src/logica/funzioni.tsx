@@ -1,10 +1,10 @@
-import Home from "../pagine/home";
+import Home from "../pagine/News/home";
 import Notif from "../pagine/notification";
 import Message from "../pagine/message";
 import Profile from "../pagine/User/profile";
-import Exp from "../pagine/explore";
-import Plus from "../pagine/plus";
-import My_proj from "../pagine/my_proj";
+import Exp from "../pagine/Projects/explore";
+import Plus from "../pagine/Projects/plus";
+import My_proj from "../pagine/Projects/my_proj";
 import React from "react";
 import { root } from "../main";
 import MyComponent from "../components/dettagli_proj";
@@ -12,29 +12,39 @@ import Dettagli_prof from "../pagine/User/dettagli_prof";
 
 //creo la classe delle news
 export class News {
-  news_data: string;
-  news_title: string;
-  news_description: string;
-  u_project: string;
-  u_name: string;
-  fnews_src: string;
-  g_news: string[];
+  _id: string;
+  project_id: string;
+  project_name: string;
+  title: string;
+  description: string;
+  author: string;
+  publish_date: string;
+  attachments: any[];
+  likes: any[];
+  comments: any[];
+
   constructor(
-    u_project: string,
-    u_name: string,
+    _id: string,
+    project_id: string,
+    project_name: string,
     title: string,
     description: string,
-    data: string,
-    fprog_src: string,
-    f_news: string[]
+    author: string,
+    publish_date: string,
+    attachments: any[],
+    likes: any[],
+    comments: any[]
   ) {
-    this.news_data = data;
-    this.news_title = title;
-    this.news_description = description;
-    this.u_project = u_project;
-    this.u_name = u_name;
-    this.fnews_src = fprog_src;
-    this.g_news = f_news;
+    this._id = _id;
+    this.project_id = project_id;
+    this.project_name = project_name;
+    this.title = title;
+    this.description = description;
+    this.author = author;
+    this.publish_date = publish_date;
+    this.attachments = attachments;
+    this.likes = likes;
+    this.comments = comments;
   }
 }
 
@@ -203,15 +213,11 @@ export const expand_proj = (id: string, comp: JSX.Element) => {
 export const show_profile = (id: string, comp: JSX.Element) => {
   root.render(
     <>
-      <Dettagli_prof userName={id} comp={comp} />
+      <Dettagli_prof id={id} comp={comp} />
     </>
   );
 };
 
-export const interaction = () => {};
-
-export const search_exp = () => {};
-export const imp_filter = () => {};
-
-export const crea_proj = () => {};
-export const mod_profile = () => {};
+export const alert_butt = () => {
+  alert("funzione non ancora implementata");
+};
