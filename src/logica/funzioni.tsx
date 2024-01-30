@@ -12,29 +12,39 @@ import Dettagli_prof from "../pagine/User/dettagli_prof";
 
 //creo la classe delle news
 export class News {
-  news_data: string;
-  news_title: string;
-  news_description: string;
-  u_project: string;
-  u_name: string;
-  fnews_src: string;
-  g_news: string[];
+  _id: string;
+  project_id: string;
+  project_name: string;
+  title: string;
+  description: string;
+  author: string;
+  publish_date: string;
+  attachments: any[];
+  likes: any[];
+  comments: any[];
+
   constructor(
-    u_project: string,
-    u_name: string,
+    _id: string,
+    project_id: string,
+    project_name: string,
     title: string,
     description: string,
-    data: string,
-    fprog_src: string,
-    f_news: string[]
+    author: string,
+    publish_date: string,
+    attachments: any[],
+    likes: any[],
+    comments: any[]
   ) {
-    this.news_data = data;
-    this.news_title = title;
-    this.news_description = description;
-    this.u_project = u_project;
-    this.u_name = u_name;
-    this.fnews_src = fprog_src;
-    this.g_news = f_news;
+    this._id = _id;
+    this.project_id = project_id;
+    this.project_name = project_name;
+    this.title = title;
+    this.description = description;
+    this.author = author;
+    this.publish_date = publish_date;
+    this.attachments = attachments;
+    this.likes = likes;
+    this.comments = comments;
   }
 }
 
