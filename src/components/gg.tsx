@@ -5,6 +5,8 @@ import Crea_news from "../pagine/News/crea_news";
 import MyComponent, { proj } from "./dettagli_proj";
 import Manager_button from "./manager_menu";
 import FollowButton from "./follow_butt";
+import ManagerButton from "./manager_menu";
+import Supporta from "./supporta";
 
 interface CompInt {
   livello: boolean;
@@ -58,13 +60,13 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                 className="news-text"
                 onClick={() =>
                   show_profile(
-                    "3",
+                    project.user._id,
                     <MyComponent parametroNumero={project._id} comp={comp} />
                   )
                 }
               >
                 {/*MANCA NOME MANAGER */}
-                Creato da: @{project.name}
+                Creato da: @{project.user.username}
               </p>
               {!Cookies.get("authToken") ? (
                 <>
@@ -89,12 +91,26 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                   </div>
                   <div className="ls-bt">
                     <div className="d-grid gap-3 ">
-                      {!livello ? (
+                      {!livello ? ( //solo per utenti normali non collaboratori o manager
                         <>
                           <a
                             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
                             href="#"
                             role="button"
+                            onClick={() =>
+                              root.render(
+                                <Supporta
+                                  proj={project}
+                                  comp={
+                                    <Comp
+                                      comp={comp}
+                                      livello={livello}
+                                      project={project}
+                                    />
+                                  }
+                                />
+                              )
+                            }
                           >
                             <b>Supporta</b>
                           </a>
@@ -139,18 +155,15 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                           >
                             <b>Modifica News</b>
                           </a>
-                          <a
-                            className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
-                            href="#"
-                            role="button"
-                          >
-                            <b>Insights</b>
-                          </a>
                         </>
                       ) : (
                         <p></p>
                       )}
-                      {livello ? <Manager_button></Manager_button> : <p></p>}
+                      {livello ? (
+                        <ManagerButton proj={project}></ManagerButton>
+                      ) : (
+                        <p></p>
+                      )}
                     </div>
                   </div>
                 </>

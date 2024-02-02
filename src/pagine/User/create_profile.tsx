@@ -5,7 +5,7 @@ import { init } from "./login";
 import { root } from "../../main";
 import Profile from "./profile";
 
-export function close() {
+export function closeC() {
   document.getElementById("toast")!.classList.remove("show");
 }
 const apiUrl = "http://localhost:5000/api/add_user";
@@ -58,12 +58,12 @@ function Create_profile() {
             error.response.data.message;
         else if (error.response.data.message.includes("email"))
           document.getElementById("mess-text")!.innerHTML = "Email già in uso";
-        else if (error.response.data.message.includes("username"))
+        else if (error.response.data.message.includes("username")) {
           document.getElementById("mess-text")!.innerHTML =
             "Username già in uso";
-        else alert("Errore durante la registrazione");
-        document.getElementById("mess-text")!.innerHTML =
-          "Errore durante la registrazione";
+        } else
+          document.getElementById("mess-text")!.innerHTML =
+            "Errore durante la registrazione";
         console.error("Errore durante la registrazione:", error);
         document.getElementById("toast")!.classList.add("show");
       }
@@ -73,8 +73,7 @@ function Create_profile() {
   return (
     <>
       <div
-        className="toast align-items-center text-bg-danger border-0"
-        role="alert"
+        className="toast position-relative top-0 start-50 translate-middle-x text-bg-danger"
         aria-live="assertive"
         aria-atomic="true"
         id="toast"
@@ -88,7 +87,7 @@ function Create_profile() {
             className="btn-close btn-close-white me-2 m-auto"
             data-bs-dismiss="toast"
             aria-label="Close"
-            onClick={close}
+            onClick={closeC}
           ></button>
         </div>
       </div>

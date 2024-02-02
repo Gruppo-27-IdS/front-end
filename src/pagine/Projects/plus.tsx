@@ -3,6 +3,10 @@ import { utente } from "../../logica/funzioni";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { reload } from "../User/login";
+import { root } from "../../main";
+import MyComponent from "../../components/dettagli_proj";
+import My_proj from "./my_proj";
+import { closeC } from "../User/create_profile";
 const apiUrl = "http://localhost:5000/api/add_project";
 function Plus() {
   const [name, setName] = useState("");
@@ -33,9 +37,19 @@ function Plus() {
           }
         );
         console.log(response.data);
+        if (response.data.message === "Project added successfully") {
+          root.render(<My_proj />);
+        } else {
+          document.getElementById("mess-text")!.innerHTML =
+            "Errore durante la creazione del progetto";
+
+          document.getElementById("toast")!.classList.add("show");
+        }
         // Gestisci la risposta qui se necessario
-      } catch (error) {
-        console.error("Errore durante la richiesta:", error);
+      } catch (error: any) {
+        document.getElementById("mess-text")!.innerHTML = error.data.messagge;
+
+        document.getElementById("toast")!.classList.add("show");
       }
     }
     fetchData();
@@ -52,6 +66,25 @@ function Plus() {
         </div>
       ) : (
         <>
+          <div
+            className="toast position-relative top-0 start-50 translate-middle-x text-bg-danger"
+            aria-live="assertive"
+            aria-atomic="true"
+            id="toast"
+          >
+            <div className="d-flex">
+              <div className="toast-body" id="mess-text">
+                Hello, world! This is a toast message.
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+                onClick={closeC}
+              ></button>
+            </div>
+          </div>
           <div className="jj" style={{ paddingTop: 15 }}>
             <form className="row g-3" onSubmit={crea_pj}>
               <div className="col-12">

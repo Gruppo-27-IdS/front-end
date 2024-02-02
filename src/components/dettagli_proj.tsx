@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { root } from "../main";
 import My_proj from "../pagine/Projects/my_proj";
-import { show_profile, utente } from "../logica/funzioni";
+import { Utente, show_profile, utente } from "../logica/funzioni";
 import Manager_button from "./manager_menu";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -15,6 +15,19 @@ interface MyComponentProps {
   parametroNumero: string;
   comp: JSX.Element;
 }
+export interface user {
+  _id: string;
+  username: string;
+  name: string;
+  surname: string;
+  age: number;
+  phone: string;
+  email: string;
+  password: string;
+  supported_projects: number;
+  created: string;
+  __v: number;
+}
 export interface proj {
   _id: string;
   name: string;
@@ -25,6 +38,7 @@ export interface proj {
   opensource: boolean;
   images: string[];
   __v: number;
+  user: user;
 }
 
 //liv -1 non loggato (vede descrizioni progetti)
@@ -45,6 +59,19 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
     opensource: false,
     images: [],
     __v: 0,
+    user: {
+      _id: "",
+      username: "",
+      name: "",
+      surname: "",
+      age: 0,
+      phone: "",
+      email: "",
+      password: "",
+      supported_projects: 0,
+      created: "",
+      __v: 0,
+    },
   };
 
   const get_dati = () => {
@@ -63,6 +90,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
         project.opensource = response.data.project.opensource;
         project.images = response.data.project.images;
         project.__v = response.data.project.__v;
+        project.user = response.data.user;
 
         try {
           const response2 = await axios.post(
@@ -77,7 +105,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
             }
           );
 
-          console.log(response2.data);
+          console.log(project.user);
           livello = false;
           response2.data.forEach((project: proj) => {
             console.log(livello);

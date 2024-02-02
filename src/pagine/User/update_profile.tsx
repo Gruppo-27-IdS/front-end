@@ -3,6 +3,7 @@ import { root } from "../../main";
 import Profile from "./profile";
 import { utente } from "../../logica/funzioni";
 import axios from "axios";
+import Cookies from "js-cookie";
 const apiUrl = "http://localhost:5000/api/update_user";
 
 function Update_profile() {
@@ -20,18 +21,39 @@ function Update_profile() {
         if (password === "") {
           pswNuova = utente.password;
         }
-        const response = await axios.post(apiUrl, {
-          id: utente._id,
-          username: username,
-          name: name,
-          surname: surname,
-          age: age,
-          phone: phone,
-          email: email,
-          password: pswNuova,
-        });
+        const response = await axios.post(
+          apiUrl,
+          {
+            id: utente._id,
+            username: username,
+            name: name,
+            surname: surname,
+            email: email,
+            phone: phone,
+            age: age,
+            password: pswNuova,
+          },
+          { headers: { token: Cookies.get("authToken") } }
+        );
+        console.log(
+          name,
+          surname,
+          username,
+          phone,
+          email,
+          age,
+          utente.password
+        );
 
         if (response.data.message === "User Updated Successfully") {
+          utente.username = username;
+          utente.name = name;
+          utente.surname = surname;
+          utente.email = email;
+          utente.phone = phone;
+          utente.age = parseInt(age);
+          utente.password = pswNuova;
+
           root.render(<Profile />);
         }
       } catch (error: any) {
@@ -58,7 +80,7 @@ function Update_profile() {
               type="text"
               className="form-control"
               id="inputName"
-              value={utente.name}
+              defaultValue={utente.name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
@@ -70,7 +92,7 @@ function Update_profile() {
               type="text"
               className="form-control"
               id="inputSurname"
-              value={utente.surname}
+              defaultValue={utente.surname}
               onChange={(e) => setSurname(e.target.value)}
             />
           </div>
@@ -82,7 +104,7 @@ function Update_profile() {
               type="text"
               className="form-control"
               id="inputUsername"
-              value={utente.username}
+              defaultValue={utente.username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
@@ -94,7 +116,7 @@ function Update_profile() {
               type="text"
               className="form-control"
               id="inputPhone"
-              value={utente.phone}
+              defaultValue={utente.phone}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
@@ -117,7 +139,7 @@ function Update_profile() {
               type="email"
               className="form-control"
               id="inputEmail"
-              value={utente.email}
+              defaultValue={utente.email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -129,7 +151,7 @@ function Update_profile() {
               type="number"
               className="form-control"
               id="inputAge"
-              value={utente.age}
+              defaultValue={utente.age}
               onChange={(e) => setAge(e.target.value)}
             />
           </div>

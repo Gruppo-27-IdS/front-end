@@ -9,6 +9,8 @@ import React from "react";
 import { root } from "../main";
 import MyComponent from "../components/dettagli_proj";
 import Dettagli_prof from "../pagine/User/dettagli_prof";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 //creo la classe delle news
 export class News {
@@ -50,37 +52,8 @@ export class News {
     this.author_id = author_id;
   }
 }
-
-//creo la classe dei progetti
-export class Project {
-  _id: string;
-  name: string;
-  description: string;
-  category: string;
-  start_date: Date;
-  end_date: Date;
-  opensource: Boolean;
-  constructor(
-    _id: string,
-    name: string,
-    description: string,
-    category: string,
-    start_date: Date,
-    end_date: Date,
-    opensource: Boolean
-  ) {
-    this._id = _id;
-    (this.name = name),
-      (this.description = description),
-      (this.category = category),
-      (this.start_date = start_date),
-      (this.end_date = end_date);
-    this.opensource = opensource;
-  }
-}
-
 //creo la classe utente
-class Utente {
+export class Utente {
   age: number;
   created: Date;
   email: string;
@@ -113,6 +86,34 @@ class Utente {
     this.username = username;
     this.__v = __v;
     this._id = _id;
+  }
+}
+
+//creo la classe dei progetti
+export class Project {
+  _id: string;
+  name: string;
+  description: string;
+  category: string;
+  start_date: Date;
+  end_date: Date;
+  opensource: Boolean;
+  constructor(
+    _id: string,
+    name: string,
+    description: string,
+    category: string,
+    start_date: Date,
+    end_date: Date,
+    opensource: Boolean
+  ) {
+    this._id = _id;
+    (this.name = name),
+      (this.description = description),
+      (this.category = category),
+      (this.start_date = start_date),
+      (this.end_date = end_date);
+    this.opensource = opensource;
   }
 }
 
@@ -223,4 +224,24 @@ export const show_profile = (id: string, comp: JSX.Element) => {
 
 export const alert_butt = () => {
   alert("funzione non ancora implementata");
+};
+
+export const eliminaProgetto = (id: string) => {
+  const fetchData = async () => {
+    try {
+      var data = { project_id: id };
+      var header = { token: Cookies.get("authToken") };
+      const response = await axios.delete(
+        "http://localhost:5000/api/delete_project",
+        {
+          data: data,
+          headers: header,
+        }
+      );
+      root.render(<My_proj />);
+    } catch (error: any) {
+      console.error("Errore durante l'eliminazione:", error.message);
+    }
+  };
+  fetchData();
 };
