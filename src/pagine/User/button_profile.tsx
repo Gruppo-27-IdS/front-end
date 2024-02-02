@@ -4,22 +4,23 @@ import { alert_butt, utente } from "../../logica/funzioni";
 import { root } from "../../main";
 import { handleLogOut } from "./profile";
 import Update_profile from "./update_profile";
+import Login from "./login";
 let apiUrl = "http://localhost:5000/api/remove_user";
 function Button_prof() {
   const handleDelete = () => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(
+        var data = { id: utente._id };
+        var header = { token: Cookies.get("authToken") };
+        const response = await axios.delete(
           apiUrl,
+
           {
-            id: utente._id,
-          },
-          {
-            headers: {
-              token: Cookies.get("authToken"),
-            },
+            data: data,
+            headers: header,
           }
         );
+        handleLogOut();
       } catch (error: any) {
         console.error("Errore durante l'eliminazione:", error.message);
       }

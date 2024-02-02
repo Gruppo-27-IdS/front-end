@@ -8,7 +8,7 @@ import {
 import TopBar from "../top-bar";
 import axios from "axios";
 import Cookies from "js-cookie";
-const apiUrl1 = "http://localhost:5000/api/explore_projects";
+let apiUrl1 = "http://localhost:5000/api/explore_projects";
 const apiUrl2 = "http://localhost:5000/api/get_proj_by_name";
 interface proj {
   _id: string;
@@ -25,21 +25,34 @@ function Exp() {
   const getDati = () => {
     setProjectList([]);
     const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          apiUrl1,
-          {
-            user_id: utente._id,
-          },
-          {
-            headers: {
-              token: Cookies.get("authToken"),
+      if (Cookies.get("authToken") === undefined) {
+        apiUrl1 = "http://localhost:5000/api/get_all_projects";
+        try {
+          const response = await axios.get(apiUrl1);
+          setProjectList(response.data);
+        } catch (error: any) {
+          console.error("Errore durante il recupero dei dati esplora:", error);
+        }
+      } else {
+        apiUrl1 = "http://localhost:5000/api/explore_projects";
+        try {
+          const response = await axios.post(
+            apiUrl1,
+            {
+              user_id: utente._id,
             },
-          }
-        );
-        setProjectList(response.data);
-      } catch (error: any) {
-        console.error("Errore durante il recupero dei dati:", error.message);
+            {
+              headers: {
+                token: Cookies.get("authToken"),
+              },
+            }
+          );
+          setProjectList(response.data);
+        } catch (error: any) {
+          console.error("Errore durante il recupero dei dati esplora:", error);
+          console.log(utente._id);
+          console.log(Cookies.get("authToken"));
+        }
       }
     };
     fetchData();

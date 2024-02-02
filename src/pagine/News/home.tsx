@@ -12,7 +12,7 @@ import Profile from "../User/profile";
 import { reload } from "../User/login";
 import Cookies from "js-cookie";
 import { set } from "mongoose";
-const apiUrl = "http://localhost:5000/api/get_news_by_proj";
+const apiUrl = "http://localhost:5000/api/get_news_followed";
 const apiUrl1 = "http://localhost:5000/api/add_or_remove_like";
 const apiUrl2 = "http://localhost:5000/api/add_comment_news";
 const pathD1 =
@@ -119,10 +119,10 @@ function Home() {
       try {
         const response = await axios.post(
           apiUrl,
-          { project_id: "65b51c36742d0c8af86f1cae" },
+          { user_id: utente._id },
           {
             headers: {
-              Tokens: Cookies.get("authToken"),
+              Token: Cookies.get("authToken"),
             },
           }
         );
@@ -173,7 +173,7 @@ function Home() {
                 <p className="news-text ">{item.description}</p>
                 <p
                   className="ut-tg"
-                  onClick={() => show_profile(item.project_id, <Home />)}
+                  onClick={() => show_profile(item.author_id, <Home />)}
                 >
                   @{item.author}
                 </p>

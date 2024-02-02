@@ -5,6 +5,9 @@ import { init } from "./login";
 import { root } from "../../main";
 import Profile from "./profile";
 
+export function close() {
+  document.getElementById("toast")!.classList.remove("show");
+}
 const apiUrl = "http://localhost:5000/api/add_user";
 function Create_profile() {
   const [password, setPassword] = useState("");
@@ -44,15 +47,51 @@ function Create_profile() {
             console.error("Errore durante il log-in:", error.message);
           }
           root.render(<Profile />);
+        } else {
+          document.getElementById("mess-text")!.innerHTML =
+            "Errore durante la registrazione";
+          document.getElementById("toast")!.classList.add("show");
         }
       } catch (error: any) {
-        console.error("Errore durante la registrazione:", error.message);
+        if (error.response.data.message === "password is not valid")
+          document.getElementById("mess-text")!.innerHTML =
+            error.response.data.message;
+        else if (error.response.data.message.includes("email"))
+          document.getElementById("mess-text")!.innerHTML = "Email già in uso";
+        else if (error.response.data.message.includes("username"))
+          document.getElementById("mess-text")!.innerHTML =
+            "Username già in uso";
+        else alert("Errore durante la registrazione");
+        document.getElementById("mess-text")!.innerHTML =
+          "Errore durante la registrazione";
+        console.error("Errore durante la registrazione:", error);
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
   };
   return (
     <>
+      <div
+        className="toast align-items-center text-bg-danger border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Hello, world! This is a toast message.
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={close}
+          ></button>
+        </div>
+      </div>
       <button
         type="button"
         className="btn-close p-10"

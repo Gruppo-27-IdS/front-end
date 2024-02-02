@@ -22,6 +22,7 @@ export class News {
   attachments: any[];
   likes: any[];
   comments: any[];
+  author_id: string;
 
   constructor(
     _id: string,
@@ -33,7 +34,8 @@ export class News {
     publish_date: string,
     attachments: any[],
     likes: any[],
-    comments: any[]
+    comments: any[],
+    author_id: string
   ) {
     this._id = _id;
     this.project_id = project_id;
@@ -45,6 +47,7 @@ export class News {
     this.attachments = attachments;
     this.likes = likes;
     this.comments = comments;
+    this.author_id = author_id;
   }
 }
 

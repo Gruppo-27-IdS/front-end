@@ -138,7 +138,7 @@ function Update_profile() {
               className="btn bg-color-mod white "
               onClick={() => update_prof()}
             >
-              Registrati
+              Modifica
             </button>
           </div>
         </form>
