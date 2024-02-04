@@ -1,21 +1,29 @@
-function Message() {
-  let l = ["chat1", "chat2", "chat3", "chat4", "chat5", "chat6"];
+import React, { ReactNode } from "react";
+import { root } from "../main";
+
+type MessageProps = {
+  comp: JSX.Element;
+};
+
+function Message({ comp }: MessageProps) {
+  let l = [];
 
   return (
     <>
+      <button
+        type="button"
+        className="btn-close p-10"
+        aria-label="Close"
+        onClick={() => root.render(comp)}
+      ></button>
       <div className="list-group jj">
-        {l.map((item) => (
-          <button
-            type="button"
-            className="list-group-item list-group-item-action "
-            aria-current="true"
-            style={{ fontSize: 20 }}
-          >
-            {item}
-          </button>
-        ))}
+        <h5 style={{ textAlign: "center" }}>Messaggi: </h5>
+        <p style={{ textAlign: "center" }}>
+          Ehi! Qui non sembra esserci nessun messaggio
+        </p>
       </div>
     </>
   );
 }
+
 export default Message;

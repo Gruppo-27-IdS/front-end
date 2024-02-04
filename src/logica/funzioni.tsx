@@ -6,9 +6,12 @@ import Exp from "../pagine/Projects/explore";
 import Plus from "../pagine/Projects/plus";
 import My_proj from "../pagine/Projects/my_proj";
 import React from "react";
-import { root } from "../main";
+import { root, rootTopBar } from "../main";
 import MyComponent from "../components/dettagli_proj";
 import Dettagli_prof from "../pagine/User/dettagli_prof";
+import Cookies from "js-cookie";
+import axios from "axios";
+import TopBar from "../pagine/top-bar";
 
 //creo la classe delle news
 export class News {
@@ -22,6 +25,7 @@ export class News {
   attachments: any[];
   likes: any[];
   comments: any[];
+  author_id: string;
 
   constructor(
     _id: string,
@@ -33,7 +37,8 @@ export class News {
     publish_date: string,
     attachments: any[],
     likes: any[],
-    comments: any[]
+    comments: any[],
+    author_id: string
   ) {
     this._id = _id;
     this.project_id = project_id;
@@ -45,6 +50,47 @@ export class News {
     this.attachments = attachments;
     this.likes = likes;
     this.comments = comments;
+    this.author_id = author_id;
+  }
+}
+//creo la classe utente
+export class Utente {
+  age: number;
+  created: Date;
+  email: string;
+  name: string;
+  password: string;
+  phone: string;
+  surname: string;
+  username: string;
+  supported_projects: number;
+
+  __v: number;
+  _id: string; //-1->non loggato 0->loggato 1->supporter 2->collaboratore 3->manager
+  constructor(
+    age: number,
+    created: Date,
+    email: string,
+    name: string,
+    password: string,
+    phone: string,
+    surname: string,
+    username: string,
+    __v: number,
+    _id: string,
+    supported_projects: number
+  ) {
+    this.age = age;
+    this.created = created;
+    this.email = email;
+    this.name = name;
+    this.password = password;
+    this.phone = phone;
+    this.surname = surname;
+    this.username = username;
+    this.__v = __v;
+    this._id = _id;
+    this.supported_projects = supported_projects;
   }
 }
 
@@ -76,45 +122,8 @@ export class Project {
   }
 }
 
-//creo la classe utente
-class Utente {
-  age: number;
-  created: Date;
-  email: string;
-  name: string;
-  password: string;
-  phone: string;
-  surname: string;
-  username: string;
-  __v: number;
-  _id: string; //-1->non loggato 0->loggato 1->supporter 2->collaboratore 3->manager
-  constructor(
-    age: number,
-    created: Date,
-    email: string,
-    name: string,
-    password: string,
-    phone: string,
-    surname: string,
-    username: string,
-    __v: number,
-    _id: string
-  ) {
-    this.age = age;
-    this.created = created;
-    this.email = email;
-    this.name = name;
-    this.password = password;
-    this.phone = phone;
-    this.surname = surname;
-    this.username = username;
-    this.__v = __v;
-    this._id = _id;
-  }
-}
-
 //creo l'oggetto utente in cui verranno salvati i dati dell'utente loggato
-export let utente = new Utente(0, new Date(), "", "", "", "", "", "", 0, "");
+export let utente = new Utente(0, new Date(), "", "", "", "", "", "", 0, "", 0);
 
 export const lista_tuoi_progetti = [];
 
@@ -128,7 +137,7 @@ export const handleClick = (
   allNavLinks.forEach((link) => link.classList.remove("active"));
   clickedElement.classList.add("active");
   clickedElement.classList.add("bg-hj");
-
+  rootTopBar.render(<TopBar />);
   if (str === "home") {
     const homeComponent = (
       <>
@@ -139,14 +148,14 @@ export const handleClick = (
   } else if (str === "notif") {
     const homeComponent = (
       <>
-        <Notif />
+        <Notif comp={<Home />} />
       </>
     );
     root.render(homeComponent);
   } else if (str === "chat") {
     const homeComponent = (
       <>
-        <Message />
+        <Message comp={<Home />} />
       </>
     );
     root.render(homeComponent);
@@ -220,4 +229,24 @@ export const show_profile = (id: string, comp: JSX.Element) => {
 
 export const alert_butt = () => {
   alert("funzione non ancora implementata");
+};
+
+export const eliminaProgetto = (id: string) => {
+  const fetchData = async () => {
+    try {
+      var data = { project_id: id };
+      var header = { token: Cookies.get("authToken") };
+      const response = await axios.delete(
+        "http://localhost:5000/api/delete_project",
+        {
+          data: data,
+          headers: header,
+        }
+      );
+      root.render(<My_proj />);
+    } catch (error: any) {
+      console.error("Errore durante l'eliminazione:", error.message);
+    }
+  };
+  fetchData();
 };

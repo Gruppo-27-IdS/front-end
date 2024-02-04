@@ -1,4 +1,11 @@
-function Manager_button() {
+import { proj } from "./dettagli_proj";
+import { eliminaProgetto } from "../logica/funzioni";
+
+interface ManagerButtonProps {
+  proj: proj;
+}
+
+function ManagerButton({ proj }: ManagerButtonProps) {
   return (
     <>
       <a
@@ -16,21 +23,16 @@ function Manager_button() {
       >
         <b>Richieste di partecipazione</b>
       </a>
-      <a
-        className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
-        href="#"
-        role="button"
-      >
-        <b>Visualizza Premi Raggiunti</b>
-      </a>
+
       <a
         className="btn btn-danger white btn-mod-2 d-flex justify-content-center"
         href="#"
         role="button"
+        onClick={() => eliminaProgetto(proj._id)}
       >
         <b>Elimina progetto</b>
       </a>
     </>
   );
 }
-export default Manager_button;
+export default ManagerButton;

@@ -52,6 +52,15 @@ function My_proj() {
             className="row row-cols-1 row-cols-md-2 g-4 jj"
             style={{ paddingTop: 5 }}
           >
+            {lista_tuoi_progetti.length === 0 ? (
+              <p style={{ textAlign: "center", paddingTop: 15 }}>
+                Qui puoi vedere i progetti che hai creato!
+                <br />
+                Crea un nuovo progetto per iniziare!
+              </p>
+            ) : (
+              <></>
+            )}
             {lista_tuoi_progetti.map((item) => (
               <>
                 <div className="col" key={item._id}>

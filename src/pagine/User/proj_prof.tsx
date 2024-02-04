@@ -17,6 +17,7 @@ interface proj {
 }
 
 const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
+  console.log(list);
   return (
     <>
       <button
