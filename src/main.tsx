@@ -14,7 +14,7 @@ export const rootTopBar = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <p>ciao</p>
+    <App />
   </React.StrictMode>
 );
 ReactDOM.createRoot(document.getElementById("navBar") as HTMLElement).render(
