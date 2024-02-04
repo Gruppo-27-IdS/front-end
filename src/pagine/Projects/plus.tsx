@@ -3,24 +3,32 @@ import { utente } from "../../logica/funzioni";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { reload } from "../User/login";
-import { root } from "../../main";
+import { baseUrl, root } from "../../main";
 import MyComponent from "../../components/dettagli_proj";
 import My_proj from "./my_proj";
 import { closeC } from "../User/create_profile";
-const apiUrl = "http://localhost:5000/api/add_project";
+const apiUrl = "add_project";
 function Plus() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [start_date, setStart_date] = useState(new Date());
-  const [end_date, setEnd_date] = useState(new Date());
+  const [end_date, setEnd_date] = useState(new Date(""));
   const [opensource, setOpensource] = useState(false);
   const [manager, setManager] = useState(utente.username);
   const crea_pj = () => {
     async function fetchData() {
+      if (end_date != new Date("")) {
+        if (end_date < start_date) {
+          document.getElementById("mess-text")!.innerHTML =
+            "La data di fine progetto non può essere precedente a quella di inizio";
+
+          document.getElementById("toast")!.classList.add("show");
+        }
+      }
       try {
         const response = await axios.post(
-          apiUrl,
+          baseUrl + apiUrl,
           {
             description: description,
             name: name,
@@ -74,7 +82,7 @@ function Plus() {
           >
             <div className="d-flex">
               <div className="toast-body" id="mess-text">
-                Hello, world! This is a toast message.
+                Errore
               </div>
               <button
                 type="button"
@@ -112,21 +120,44 @@ function Plus() {
                 />
               </div>
               <div className="col-12">
+                <label htmlFor="inputStartDate" className="form-label">
+                  Data di inizio progetto
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="inputStartDate"
+                  onChange={(e) => setStart_date(new Date(e.target.value))}
+                  required
+                />
+              </div>
+              <div className="col-12">
                 <label htmlFor="inputEndDate" className="form-label">
-                  Data di fine progetto
+                  Data di fine progetto (non obbligatoria)
                 </label>
                 <input
                   type="date"
                   className="form-control"
                   id="inputEndDate"
                   onChange={(e) => setEnd_date(new Date(e.target.value))}
-                  required
                 />
               </div>
               <div className="col-md-6">
+                <label htmlFor="inputState" className="form-label">
+                  Categoria
+                </label>
+                <input
+                  id="inputState"
+                  className="form-control"
+                  type="text"
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="col-md-6" style={{ paddingLeft: 20 }}>
                 <div
                   className="form-check form-switch"
-                  style={{ paddingTop: 5 }}
+                  style={{ paddingTop: 30 }}
                 >
                   <input
                     className="form-check-input"
@@ -142,25 +173,6 @@ function Plus() {
                     Opensource
                   </label>
                 </div>
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="inputState" className="form-label">
-                  Categoria
-                </label>
-                <select
-                  id="inputState"
-                  className="form-select"
-                  defaultValue={"DEFAULT"}
-                  onChange={(e) => setCategory(e.target.value)}
-                  required
-                >
-                  <option value="DEFAULT" disabled>
-                    Seleziona
-                  </option>
-                  <option>Categoria A</option>
-                  <option>Categoria B</option>
-                  <option>Categoria C</option>
-                </select>
               </div>
 
               <div className="col-12 justify-content-center d-flex">

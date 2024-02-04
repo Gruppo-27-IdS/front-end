@@ -4,7 +4,8 @@ import Profile from "./profile";
 import { utente } from "../../logica/funzioni";
 import axios from "axios";
 import Cookies from "js-cookie";
-const apiUrl = "http://localhost:5000/api/update_user";
+import { baseUrl } from "../../main";
+const apiUrl = "http://localhost:5000/api/" + "update_user";
 
 function Update_profile() {
   const [password, setPassword] = useState("");

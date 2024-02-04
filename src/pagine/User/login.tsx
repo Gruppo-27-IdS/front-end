@@ -41,6 +41,7 @@ export function init(e: any) {
   utente.phone = e.phone;
   utente.surname = e.surname;
   utente.username = e.username;
+  utente.supported_projects = e.supported_projects;
 }
 
 //componente Login

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { root } from "../main";
+import { root, rootTopBar } from "../main";
 import My_proj from "../pagine/Projects/my_proj";
 import { Utente, show_profile, utente } from "../logica/funzioni";
 import Manager_button from "./manager_menu";
@@ -7,10 +7,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Crea_news from "../pagine/News/crea_news";
 import Comp from "./gg";
-
-const apiUrl = "http://localhost:5000/api/get_proj_by_id";
-const apiUrl1 = "http://localhost:5000/api/get_proj_created";
-let livello = false;
+import { baseUrl } from "../main";
+import TopBar from "../pagine/top-bar";
+const apiUrl = "http://localhost:5000/api/" + "get_proj_by_id";
+const apiUrl1 = "http://localhost:5000/api/" + "get_user_role";
+const apiUrl3 = "get_collabs_from_proj";
+let livello = 0;
 interface MyComponentProps {
   parametroNumero: string;
   comp: JSX.Element;
@@ -49,6 +51,7 @@ export interface proj {
 // rimuovi collaboratore, gestisci chat, definisci premi, modifica, elimina progetto, mostra richieste e premi raggiunti)
 
 const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
+  rootTopBar.render(<TopBar />);
   let project = {
     _id: "",
     name: "",
@@ -97,6 +100,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
             apiUrl1,
             {
               user_id: utente._id,
+              project_id: parametroNumero,
             },
             {
               headers: {
@@ -105,18 +109,45 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
             }
           );
 
-          console.log(project.user);
-          livello = false;
-          response2.data.forEach((project: proj) => {
-            console.log(livello);
-            if (project._id === parametroNumero) {
-              livello = true;
+          const response = await axios.post(
+            baseUrl + apiUrl3,
+            {
+              project_id: project._id,
+            },
+            {
+              headers: {
+                token: Cookies.get("authToken"),
+              },
             }
-          });
-          root.render(<Comp comp={comp} livello={livello} project={project} />);
+          );
+          let collaboratori = [];
+          if (response.data.message === "Collaborators found!") {
+            collaboratori = response.data.collaborators;
+          } else {
+            collaboratori = [];
+          }
+
+          console.log(project.user);
+          console.log(response2.data.role_id);
+          livello = response2.data.role_id;
+
+          root.render(
+            <Comp
+              comp={comp}
+              livello={livello}
+              project={project}
+              collaboratori={collaboratori}
+            />
+          );
         } catch (error: any) {
-          console.error("Errore durante il recupero dei dati:", error.message);
-          root.render(<Comp comp={comp} livello={livello} project={project} />);
+          root.render(
+            <Comp
+              comp={comp}
+              livello={livello}
+              project={project}
+              collaboratori={[]}
+            />
+          );
         }
       } catch (error: any) {
         console.error("Errore durante il recupero dei dati:", error.message);

@@ -5,7 +5,6 @@ import My_proj from "./pagine/Projects/my_proj";
 import Home from "./pagine/News/home";
 import Login from "./pagine/User/login";
 import Titti from "./components/supporta";
-const apiUrl = "http://localhost:5000/api/get_all_projects";
 
 function App() {
   return <Home></Home>;

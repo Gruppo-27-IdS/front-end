@@ -1,9 +1,18 @@
-function Notif() {
-  let l = [1, 2, 3, 4, 5, 6, 6, 7, 8, 5, 4, 3, 5, 6, 5, 3, 6];
+import { root } from "../main";
+
+function Notif({ comp }: { comp: JSX.Element }) {
+  let l = ["Creazione dell'account completata"];
 
   return (
     <>
+      <button
+        type="button"
+        className="btn-close p-10"
+        aria-label="Close"
+        onClick={() => root.render(comp)}
+      ></button>
       <div className="list-group jj">
+        <h5 style={{ textAlign: "center" }}>Notifiche: </h5>
         {l.map((item) => (
           <button
             type="button"

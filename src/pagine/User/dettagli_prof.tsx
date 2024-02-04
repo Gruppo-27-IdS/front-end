@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { root } from "../../main";
+import { root, rootTopBar } from "../../main";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Proj_prof from "./proj_prof";
-import { alert_butt } from "../../logica/funzioni";
+import { Project, alert_butt } from "../../logica/funzioni";
+import TopBar from "../top-bar";
 const apiUrl = "http://localhost:5000/api/get_user_by_id";
 let apiUrl1 = "http://localhost:5000/api/get_followed_projects";
 let apiUrl2 = "http://localhost:5000/api/get_proj_created";
@@ -20,18 +21,24 @@ interface User {
   surname: string;
   phone: string;
   age: number;
+  supported_projects: number;
 }
 interface proj {
-  _id: string;
-  name: string;
-  description: string;
-  category: string;
-  start_date: Date;
-  end_date: Date;
-  opensource: boolean;
+  _id: string; //
+  name: string; //
+  description: string; //
+  category: string; //
+  start_date: Date; //
+  end_date: Date; //
+  opensource: boolean; //
+  images: string[]; //
+  manager: User; //
 }
+let t2: proj[];
+let t1: proj[];
 
 const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
+  rootTopBar.render(<TopBar />);
   const [user, setUser] = useState<User>({
     username: "",
     email: "",
@@ -39,6 +46,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
     surname: "",
     phone: "",
     age: 0,
+    supported_projects: 0,
   });
   const [projectList2, setProjectList2] = useState<proj[]>([]);
   const [projectList, setProjectList] = useState<proj[]>([]);
@@ -61,6 +69,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
           }
         );
         setProjectList(response.data);
+
         const response2 = await axios.post(
           apiUrl2,
           {
@@ -72,7 +81,9 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
             },
           }
         );
-        setProjectList2(response.data);
+        setProjectList2(response2.data);
+        t2 = response2.data;
+        t1 = response.data;
         setNumProjectList(response.data.length);
         setNumProjectList2(response2.data.length);
 
@@ -109,6 +120,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
           surname: response.data.surname,
           phone: response.data.phone,
           age: response.data.age,
+          supported_projects: response.data.supported_projects,
         });
       } catch (error: any) {
         console.error("Errore durante il recupero dei dati:", error.message);
@@ -197,7 +209,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
           onClick={() =>
             root.render(
               <Proj_prof
-                list={projectList2}
+                list={t2}
                 comp={<Dettagli_prof id={id} comp={comp} />}
               />
             )
@@ -217,7 +229,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
           onClick={() =>
             root.render(
               <Proj_prof
-                list={projectList}
+                list={t1}
                 comp={<Dettagli_prof id={id} comp={comp} />}
               />
             )
@@ -232,9 +244,12 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
             </b>
           </p>
         </div>
-        <div className="dati-profilo-item" onClick={alert_butt}>
+        <div
+          className="dati-profilo-item"
+          onClick={() => console.log(user.supported_projects)}
+        >
           <div className="dati-profilo-numero">
-            <b>4</b>
+            <b>{user.supported_projects}</b>
           </div>
           <p style={{ fontSize: 15 }}>
             <b>

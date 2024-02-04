@@ -1,20 +1,23 @@
 import Cookies from "js-cookie";
 import { show_profile } from "../logica/funzioni";
-import { root } from "../main";
+import { baseUrl, root } from "../main";
 import Crea_news from "../pagine/News/crea_news";
-import MyComponent, { proj } from "./dettagli_proj";
+import MyComponent, { proj, user } from "./dettagli_proj";
 import Manager_button from "./manager_menu";
 import FollowButton from "./follow_butt";
 import ManagerButton from "./manager_menu";
 import Supporta from "./supporta";
-
+import { useEffect } from "react";
+import axios from "axios";
+const apiUrl = "get_collabs_from_proj";
 interface CompInt {
-  livello: boolean;
+  livello: number;
   comp: JSX.Element;
   project: proj;
+  collaboratori: user[];
 }
-let l = ["ciao", "titti", "pluto"];
-const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
+
+const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
   return (
     <>
       <button
@@ -55,7 +58,10 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                   />
                 ))}
               </div>
-              <p className="news-text">Data di creazione: {project.category}</p>
+              <p className="news-text">
+                Data di creazione:{" "}
+                {new Date(project.start_date).toLocaleDateString("it-IT")}
+              </p>
               <p
                 className="news-text"
                 onClick={() =>
@@ -65,7 +71,6 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                   )
                 }
               >
-                {/*MANCA NOME MANAGER */}
                 Creato da: @{project.user.username}
               </p>
               {!Cookies.get("authToken") ? (
@@ -76,22 +81,27 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
               ) : (
                 <>
                   <div className="list-group jj">
-                    <p>Lista collaboratori:</p>
-                    {l.map((item) => (
+                    {collaboratori?.length != 0 ? (
+                      <p>Lista collaboratori:</p>
+                    ) : (
+                      <></>
+                    )}
+
+                    {collaboratori?.map((item) => (
                       <button
                         type="button"
                         className="list-group-item list-group-item-action "
                         aria-current="true"
                         style={{ fontSize: 20 }}
-                        key={item}
+                        key={item._id}
                       >
-                        {item}
+                        {item.name} {item.surname}
                       </button>
                     ))}
                   </div>
                   <div className="ls-bt">
                     <div className="d-grid gap-3 ">
-                      {!livello ? ( //solo per utenti normali non collaboratori o manager
+                      {livello < 1 ? ( //solo per utenti normali non collaboratori o manager
                         <>
                           <a
                             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
@@ -106,6 +116,7 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                                       comp={comp}
                                       livello={livello}
                                       project={project}
+                                      collaboratori={collaboratori}
                                     />
                                   }
                                 />
@@ -126,7 +137,7 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                       ) : (
                         <></>
                       )}
-                      {livello ? (
+                      {livello > 0 ? (
                         <>
                           <a
                             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
@@ -159,7 +170,7 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project }) => {
                       ) : (
                         <p></p>
                       )}
-                      {livello ? (
+                      {livello === 2 ? (
                         <ManagerButton proj={project}></ManagerButton>
                       ) : (
                         <p></p>

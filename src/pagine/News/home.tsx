@@ -12,9 +12,11 @@ import Profile from "../User/profile";
 import { reload } from "../User/login";
 import Cookies from "js-cookie";
 import { set } from "mongoose";
-const apiUrl = "http://localhost:5000/api/get_news_followed";
-const apiUrl1 = "http://localhost:5000/api/add_or_remove_like";
-const apiUrl2 = "http://localhost:5000/api/add_comment_news";
+import { baseUrl, rootTopBar } from "../../main";
+import TopBar2 from "../top-bar2";
+let apiUrl = "http://localhost:5000/api/" + "get_news_followed";
+let apiUrl1 = "http://localhost:5000/api/" + "add_or_remove_like";
+let apiUrl2 = "http://localhost:5000/api/" + "add_comment_news";
 const pathD1 =
   "m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.920 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15";
 const pathD2 =
@@ -22,7 +24,33 @@ const pathD2 =
 
 //lista news dei progetti che segui
 
+function copLink() {
+  const c = document.getElementById("link-cop");
+  c!.classList.remove("d-none");
+  const linkText =
+    "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley";
+
+  // Crea un elemento di testo nascosto
+  const hiddenElement = document.createElement("textarea");
+  hiddenElement.value = linkText;
+  hiddenElement.style.position = "absolute";
+  hiddenElement.style.left = "-9999px";
+
+  // Aggiungi l'elemento al DOM
+  document.body.appendChild(hiddenElement);
+
+  // Seleziona il testo
+  hiddenElement.select();
+  document.execCommand("copy");
+  setTimeout(() => {
+    c!.classList.add("d-none");
+  }, 1000);
+  // Rimuovi l'elemento di testo dal DOM
+  document.body.removeChild(hiddenElement);
+}
+
 function Home() {
+  rootTopBar.render(<TopBar2 />);
   const [t, setT] = useState<News[]>([]);
   const [comment, setComment] = useState<string>("");
   function submit_comment(item: News) {
@@ -145,6 +173,14 @@ function Home() {
 
   return (
     <>
+      <div
+        className="alert alert-success d-none position-fixed "
+        style={{ zIndex: 1000, margin: "auto", left: 10, top: 70 }}
+        id="link-cop"
+        role="alert"
+      >
+        Link copiato negli appunti
+      </div>
       {reload() ? (
         <div className="jj" style={{ paddingTop: 30 }}>
           <div>
@@ -154,6 +190,13 @@ function Home() {
         </div>
       ) : (
         <div className="body-home jj" style={{ paddingTop: 5 }}>
+          {t.length === 0 ? (
+            <p style={{ textAlign: "center", paddingTop: 15 }}>
+              Inziare a seguire dei progetti per visualizzare le news
+            </p>
+          ) : (
+            <></>
+          )}
           {t.map((item) => (
             <div className="card news" key={item._id}>
               <div className="card-body">
@@ -233,6 +276,7 @@ function Home() {
                     fill="rgb(235, 182, 75)"
                     className="bi bi-share-fill"
                     viewBox="0 0 16 16"
+                    onClick={() => copLink()}
                   >
                     <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5" />
                   </svg>

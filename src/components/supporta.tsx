@@ -1,6 +1,9 @@
 import React from "react";
 import { proj } from "./dettagli_proj";
-import { root } from "../main";
+import { baseUrl, root } from "../main";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { utente } from "../logica/funzioni";
 export default function Supporta({
   proj,
   comp,
@@ -36,6 +39,45 @@ export default function Supporta({
       document.getElementById("conferma")?.classList.remove("active");
       document.getElementById("pagamento")?.classList.add("active");
     }
+  }
+  function supp() {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          baseUrl + "add_support_proj",
+          {
+            user_id: utente._id,
+            project_id: proj._id,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+        console.log(response.data);
+        if (
+          response.data.message ===
+          "The user support a new project Successfully"
+        ) {
+          const userDataString = localStorage.getItem("user");
+
+          if (userDataString) {
+            // Converti la stringa JSON in un oggetto JavaScript
+            const userData = JSON.parse(userDataString);
+            userData.supported_projects += 1; // Sostituisci 1 con il nuovo valore desiderato
+
+            // Aggiorna i dati utente nel localStorage
+            localStorage.setItem("user", JSON.stringify(userData));
+          }
+        }
+        alert("pagamento confermato");
+        root.render(comp);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
   }
   return (
     <>
@@ -118,7 +160,7 @@ export default function Supporta({
                 </button>
                 <button
                   className="btn bg-color-mod white "
-                  onClick={() => funzione("conferma")}
+                  onClick={() => supp()}
                 >
                   Conferma
                 </button>

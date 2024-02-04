@@ -7,9 +7,10 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import Button_prof from "./button_profile";
 import Proj_prof from "./proj_prof";
+import { baseUrl } from "../../main";
 
-let apiUrl1 = "http://localhost:5000/api/get_followed_projects";
-let apiUrl2 = "http://localhost:5000/api/get_proj_created";
+let apiUrl1 = "http://localhost:5000/api/" + "get_followed_projects";
+let apiUrl2 = "http://localhost:5000/api/" + "get_proj_created";
 //esegui il logout
 export const handleLogOut = () => {
   logout();
@@ -32,6 +33,8 @@ function Profile() {
   const [projectList, setProjectList] = useState<proj[]>([]);
   const [NumprojectList2, setNumProjectList2] = useState(0);
   const [NumprojectList, setNumProjectList] = useState(0);
+  const [sp, setSp] = useState(utente.supported_projects);
+
   const getDati = () => {
     setProjectList([]);
     setProjectList2([]);
@@ -88,6 +91,16 @@ function Profile() {
     if (savedNumProjectList2) {
       setNumProjectList2(Number(savedNumProjectList2));
     }
+    const userDataString = localStorage.getItem("user");
+
+    if (userDataString) {
+      // Converti la stringa JSON in un oggetto JavaScript
+      const userData = JSON.parse(userDataString);
+
+      // Accedi alla proprietà 'supported_projects'
+      setSp(userData.supported_projects);
+    }
+
     getDati();
   }, []);
   return (
@@ -182,7 +195,7 @@ function Profile() {
             </div>
             <div className="dati-profilo-item" onClick={alert_butt}>
               <div className="dati-profilo-numero">
-                <b>4</b>
+                <b>{sp}</b>
               </div>
               <p style={{ fontSize: 15 }}>
                 <b>

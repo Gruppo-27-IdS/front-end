@@ -6,11 +6,12 @@ import Exp from "../pagine/Projects/explore";
 import Plus from "../pagine/Projects/plus";
 import My_proj from "../pagine/Projects/my_proj";
 import React from "react";
-import { root } from "../main";
+import { root, rootTopBar } from "../main";
 import MyComponent from "../components/dettagli_proj";
 import Dettagli_prof from "../pagine/User/dettagli_prof";
 import Cookies from "js-cookie";
 import axios from "axios";
+import TopBar from "../pagine/top-bar";
 
 //creo la classe delle news
 export class News {
@@ -62,6 +63,8 @@ export class Utente {
   phone: string;
   surname: string;
   username: string;
+  supported_projects: number;
+
   __v: number;
   _id: string; //-1->non loggato 0->loggato 1->supporter 2->collaboratore 3->manager
   constructor(
@@ -74,7 +77,8 @@ export class Utente {
     surname: string,
     username: string,
     __v: number,
-    _id: string
+    _id: string,
+    supported_projects: number
   ) {
     this.age = age;
     this.created = created;
@@ -86,6 +90,7 @@ export class Utente {
     this.username = username;
     this.__v = __v;
     this._id = _id;
+    this.supported_projects = supported_projects;
   }
 }
 
@@ -118,7 +123,7 @@ export class Project {
 }
 
 //creo l'oggetto utente in cui verranno salvati i dati dell'utente loggato
-export let utente = new Utente(0, new Date(), "", "", "", "", "", "", 0, "");
+export let utente = new Utente(0, new Date(), "", "", "", "", "", "", 0, "", 0);
 
 export const lista_tuoi_progetti = [];
 
@@ -132,7 +137,7 @@ export const handleClick = (
   allNavLinks.forEach((link) => link.classList.remove("active"));
   clickedElement.classList.add("active");
   clickedElement.classList.add("bg-hj");
-
+  rootTopBar.render(<TopBar />);
   if (str === "home") {
     const homeComponent = (
       <>
@@ -143,14 +148,14 @@ export const handleClick = (
   } else if (str === "notif") {
     const homeComponent = (
       <>
-        <Notif />
+        <Notif comp={<Home />} />
       </>
     );
     root.render(homeComponent);
   } else if (str === "chat") {
     const homeComponent = (
       <>
-        <Message />
+        <Message comp={<Home />} />
       </>
     );
     root.render(homeComponent);
