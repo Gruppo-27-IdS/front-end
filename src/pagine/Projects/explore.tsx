@@ -9,8 +9,8 @@ import TopBar from "../top-bar";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { baseUrl } from "../../main";
-let apiUrl1 = "http://localhost:5000/api/" + "explore_projects";
-const apiUrl2 = "http://localhost:5000/api/" + "get_proj_by_name";
+let apiUrl1 = "explore_projects";
+const apiUrl2 = "get_proj_by_name";
 interface proj {
   _id: string;
   name: string;
@@ -21,13 +21,14 @@ interface proj {
   opensource: boolean;
 }
 function Exp() {
+  history.pushState({ page: "explore" }, "", "/explore");
   const [projectList, setProjectList] = useState<proj[]>([]);
   const [ricerca, setRicerca] = useState("");
   const getDati = () => {
     setProjectList([]);
     const fetchData = async () => {
       if (Cookies.get("authToken") === undefined) {
-        apiUrl1 = baseUrl + "get_all_projects";
+        apiUrl1 = "get_all_projects";
         try {
           const response = await axios.get(apiUrl1);
           setProjectList(response.data);
@@ -35,10 +36,10 @@ function Exp() {
           console.error("Errore durante il recupero dei dati esplora:", error);
         }
       } else {
-        apiUrl1 = baseUrl + "explore_projects";
+        apiUrl1 = "explore_projects";
         try {
           const response = await axios.post(
-            apiUrl1,
+            baseUrl + apiUrl1,
             {
               user_id: utente._id,
             },
@@ -64,7 +65,7 @@ function Exp() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          apiUrl2,
+          baseUrl + apiUrl2,
           {
             project_name: ricerca,
             //manager: ricerca,

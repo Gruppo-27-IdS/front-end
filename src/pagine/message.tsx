@@ -6,6 +6,7 @@ type MessageProps = {
 };
 
 function Message({ comp }: MessageProps) {
+  history.pushState({ page: "message" }, "", "/message");
   let l = [];
 
   return (
@@ -14,7 +15,10 @@ function Message({ comp }: MessageProps) {
         type="button"
         className="btn-close p-10"
         aria-label="Close"
-        onClick={() => root.render(comp)}
+        onClick={() => {
+          history.pushState({ page: "home" }, "", "/");
+          root.render(comp);
+        }}
       ></button>
       <div className="list-group jj">
         <h5 style={{ textAlign: "center" }}>Messaggi: </h5>

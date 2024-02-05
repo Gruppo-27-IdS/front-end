@@ -9,8 +9,8 @@ import Crea_news from "../pagine/News/crea_news";
 import Comp from "./gg";
 import { baseUrl } from "../main";
 import TopBar from "../pagine/top-bar";
-const apiUrl = "http://localhost:5000/api/" + "get_proj_by_id";
-const apiUrl1 = "http://localhost:5000/api/" + "get_user_role";
+const apiUrl = "get_proj_by_id";
+const apiUrl1 = "get_user_role";
 const apiUrl3 = "get_collabs_from_proj";
 let livello = 0;
 interface MyComponentProps {
@@ -80,7 +80,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
   const get_dati = () => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(apiUrl, {
+        const response = await axios.post(baseUrl + apiUrl, {
           project_id: parametroNumero,
         });
 
@@ -97,7 +97,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
 
         try {
           const response2 = await axios.post(
-            apiUrl1,
+            baseUrl + apiUrl1,
             {
               user_id: utente._id,
               project_id: parametroNumero,

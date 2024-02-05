@@ -3,9 +3,10 @@ import { proj } from "./dettagli_proj";
 import axios from "axios";
 import { utente } from "../logica/funzioni";
 import Cookies from "js-cookie";
-const apiUrl = "http://localhost:5000/api/get_followed_projects";
-const apiUrlFollow = "http://localhost:5000/api/follow_project";
-const apiUrlUnFollow = "http://localhost:5000/api/unfollow_project";
+import { baseUrl } from "../main";
+const apiUrl = "get_followed_projects";
+const apiUrlFollow = "follow_project";
+const apiUrlUnFollow = "unfollow_project";
 const FollowButton = ({ str }: { str: string }) => {
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -13,7 +14,7 @@ const FollowButton = ({ str }: { str: string }) => {
     const fetchData = async () => {
       try {
         const response1 = await axios.post(
-          apiUrlFollow,
+          baseUrl + apiUrlFollow,
           {
             user_id: utente._id,
             project_id: str,
@@ -39,7 +40,7 @@ const FollowButton = ({ str }: { str: string }) => {
       try {
         var data = { user_id: utente._id, project_id: str };
         var header = { token: Cookies.get("authToken") };
-        const response1 = await axios.delete(apiUrlUnFollow, {
+        const response1 = await axios.delete(baseUrl + apiUrlUnFollow, {
           data: data,
           headers: header,
         });
@@ -57,7 +58,7 @@ const FollowButton = ({ str }: { str: string }) => {
     const fetchData = async () => {
       try {
         const response1 = await axios.post(
-          apiUrl,
+          baseUrl + apiUrl,
           {
             user_id: utente._id,
           },

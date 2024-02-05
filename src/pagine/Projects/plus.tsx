@@ -9,6 +9,7 @@ import My_proj from "./my_proj";
 import { closeC } from "../User/create_profile";
 const apiUrl = "add_project";
 function Plus() {
+  history.pushState({ page: "plus" }, "", "/plus");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");

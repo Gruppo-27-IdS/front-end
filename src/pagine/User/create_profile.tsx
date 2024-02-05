@@ -2,14 +2,15 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { init } from "./login";
-import { root } from "../../main";
+import { baseUrl, root } from "../../main";
 import Profile from "./profile";
 
 export function closeC() {
   document.getElementById("toast")!.classList.remove("show");
 }
-const apiUrl = "http://localhost:5000/api/add_user";
+const apiUrl = "add_user";
 function Create_profile() {
+  history.pushState({ page: "createProfile" }, "", "/createProfile");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ function Create_profile() {
   const create_prof = () => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(apiUrl, {
+        const response = await axios.post(baseUrl + apiUrl, {
           username: username,
           name: name,
           surname: surname,
@@ -31,13 +32,10 @@ function Create_profile() {
         });
         if (response.data.message === "User Added Successfully") {
           try {
-            const response = await axios.post(
-              "http://localhost:5000/api/login_user",
-              {
-                username: username,
-                password: password,
-              }
-            );
+            const response = await axios.post(baseUrl + "login_user", {
+              username: username,
+              password: password,
+            });
             console.log(response.data);
             if (response.data.message === "Login riuscito") {
               Cookies.set("authToken", response.data.token);

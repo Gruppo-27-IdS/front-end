@@ -14,9 +14,9 @@ import Cookies from "js-cookie";
 import { set } from "mongoose";
 import { baseUrl, rootTopBar } from "../../main";
 import TopBar2 from "../top-bar2";
-let apiUrl = "http://localhost:5000/api/" + "get_news_followed";
-let apiUrl1 = "http://localhost:5000/api/" + "add_or_remove_like";
-let apiUrl2 = "http://localhost:5000/api/" + "add_comment_news";
+let apiUrl = "get_news_followed";
+let apiUrl1 = "add_or_remove_like";
+let apiUrl2 = "add_comment_news";
 const pathD1 =
   "m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.920 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15";
 const pathD2 =
@@ -50,6 +50,7 @@ function copLink() {
 }
 
 function Home() {
+  history.pushState({ page: "home" }, "", "/home");
   rootTopBar.render(<TopBar2 />);
   const [t, setT] = useState<News[]>([]);
   const [comment, setComment] = useState<string>("");
@@ -57,7 +58,7 @@ function Home() {
     let fetchData = async () => {
       try {
         const response1 = await axios.post(
-          apiUrl2,
+          baseUrl + apiUrl2,
           {
             news_id: item._id,
             username: utente.username,
@@ -101,7 +102,7 @@ function Home() {
     let fetchData = async () => {
       try {
         const response1 = await axios.post(
-          apiUrl1,
+          baseUrl + apiUrl1,
           {
             news_id: item._id,
             username: utente.username,
@@ -146,7 +147,7 @@ function Home() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          apiUrl,
+          baseUrl + apiUrl,
           { user_id: utente._id },
           {
             headers: {

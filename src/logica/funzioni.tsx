@@ -6,7 +6,7 @@ import Exp from "../pagine/Projects/explore";
 import Plus from "../pagine/Projects/plus";
 import My_proj from "../pagine/Projects/my_proj";
 import React from "react";
-import { root, rootTopBar } from "../main";
+import { baseUrl, root, rootTopBar } from "../main";
 import MyComponent from "../components/dettagli_proj";
 import Dettagli_prof from "../pagine/User/dettagli_prof";
 import Cookies from "js-cookie";
@@ -137,6 +137,7 @@ export const handleClick = (
   allNavLinks.forEach((link) => link.classList.remove("active"));
   clickedElement.classList.add("active");
   clickedElement.classList.add("bg-hj");
+
   rootTopBar.render(<TopBar />);
   if (str === "home") {
     const homeComponent = (
@@ -188,6 +189,7 @@ export const handleClick = (
     );
     root.render(homeComponent);
   } else {
+    history.pushState(null, "", "/");
     root.render(
       <div
         className="alert alert-danger d-flex align-items-center"
@@ -236,13 +238,10 @@ export const eliminaProgetto = (id: string) => {
     try {
       var data = { project_id: id };
       var header = { token: Cookies.get("authToken") };
-      const response = await axios.delete(
-        "http://localhost:5000/api/delete_project",
-        {
-          data: data,
-          headers: header,
-        }
-      );
+      const response = await axios.delete(baseUrl + "delete_project", {
+        data: data,
+        headers: header,
+      });
       root.render(<My_proj />);
     } catch (error: any) {
       console.error("Errore durante l'eliminazione:", error.message);

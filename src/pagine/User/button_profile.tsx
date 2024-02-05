@@ -1,11 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { alert_butt, utente } from "../../logica/funzioni";
-import { root } from "../../main";
+import { baseUrl, root } from "../../main";
 import { handleLogOut } from "./profile";
 import Update_profile from "./update_profile";
 import Login from "./login";
-let apiUrl = "http://localhost:5000/api/remove_user";
+let apiUrl = "remove_user";
 function Button_prof() {
   const handleDelete = () => {
     const fetchData = async () => {
@@ -13,7 +13,7 @@ function Button_prof() {
         var data = { id: utente._id };
         var header = { token: Cookies.get("authToken") };
         const response = await axios.delete(
-          apiUrl,
+          baseUrl + apiUrl,
 
           {
             data: data,

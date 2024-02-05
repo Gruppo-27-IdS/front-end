@@ -17,6 +17,7 @@ interface proj {
 }
 
 const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
+  history.pushState({ page: "proj_prof" }, "", "/listaProgetti");
   console.log(list);
   return (
     <>

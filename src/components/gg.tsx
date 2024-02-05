@@ -9,7 +9,6 @@ import ManagerButton from "./manager_menu";
 import Supporta from "./supporta";
 import { useEffect } from "react";
 import axios from "axios";
-const apiUrl = "get_collabs_from_proj";
 interface CompInt {
   livello: number;
   comp: JSX.Element;
@@ -18,6 +17,7 @@ interface CompInt {
 }
 
 const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
+  history.pushState({ page: "comp" }, "", "/progetto");
   return (
     <>
       <button

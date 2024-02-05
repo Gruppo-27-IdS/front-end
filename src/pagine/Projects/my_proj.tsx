@@ -3,9 +3,11 @@ import { useState, useEffect } from "react";
 import { Project, expand_proj, utente } from "../../logica/funzioni";
 import Cookies from "js-cookie";
 import { reload } from "../User/login";
-const apiUrl = "http://localhost:5000/api/get_proj_created";
+import { baseUrl } from "../../main";
+const apiUrl = "get_proj_created";
 
 function My_proj() {
+  history.pushState({ page: "projects" }, "", "/my_proj");
   const [lista_tuoi_progetti, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
@@ -13,7 +15,7 @@ function My_proj() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          apiUrl,
+          baseUrl + apiUrl,
           {
             user_id: utente._id,
           },
@@ -48,19 +50,19 @@ function My_proj() {
         </div>
       ) : (
         <>
+          {lista_tuoi_progetti.length === 0 ? (
+            <p style={{ textAlign: "center", paddingTop: 15 }}>
+              Qui puoi vedere i progetti che hai creato!
+              <br />
+              Crea un nuovo progetto per iniziare!
+            </p>
+          ) : (
+            <></>
+          )}
           <div
             className="row row-cols-1 row-cols-md-2 g-4 jj"
             style={{ paddingTop: 5 }}
           >
-            {lista_tuoi_progetti.length === 0 ? (
-              <p style={{ textAlign: "center", paddingTop: 15 }}>
-                Qui puoi vedere i progetti che hai creato!
-                <br />
-                Crea un nuovo progetto per iniziare!
-              </p>
-            ) : (
-              <></>
-            )}
             {lista_tuoi_progetti.map((item) => (
               <>
                 <div className="col" key={item._id}>

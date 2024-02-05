@@ -9,8 +9,8 @@ import Button_prof from "./button_profile";
 import Proj_prof from "./proj_prof";
 import { baseUrl } from "../../main";
 
-let apiUrl1 = "http://localhost:5000/api/" + "get_followed_projects";
-let apiUrl2 = "http://localhost:5000/api/" + "get_proj_created";
+let apiUrl1 = "get_followed_projects";
+let apiUrl2 = "get_proj_created";
 //esegui il logout
 export const handleLogOut = () => {
   logout();
@@ -29,6 +29,8 @@ interface proj {
 
 //componente Profile
 function Profile() {
+  history.pushState({ page: "profile" }, "", "/profile");
+
   const [projectList2, setProjectList2] = useState<proj[]>([]);
   const [projectList, setProjectList] = useState<proj[]>([]);
   const [NumprojectList2, setNumProjectList2] = useState(0);
@@ -41,7 +43,7 @@ function Profile() {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          apiUrl1,
+          baseUrl + apiUrl1,
           {
             user_id: utente._id,
           },
@@ -53,7 +55,7 @@ function Profile() {
         );
         setProjectList(response.data);
         const response2 = await axios.post(
-          apiUrl2,
+          baseUrl + apiUrl2,
           {
             user_id: utente._id,
           },

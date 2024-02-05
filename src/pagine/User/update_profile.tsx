@@ -5,9 +5,10 @@ import { utente } from "../../logica/funzioni";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { baseUrl } from "../../main";
-const apiUrl = "http://localhost:5000/api/" + "update_user";
+const apiUrl = "update_user";
 
 function Update_profile() {
+  history.pushState({ page: "update_profile" }, "", "/updateProfile");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState(utente.username);
   const [email, setEmail] = useState(utente.email);
@@ -23,7 +24,7 @@ function Update_profile() {
           pswNuova = utente.password;
         }
         const response = await axios.post(
-          apiUrl,
+          baseUrl + apiUrl,
           {
             id: utente._id,
             username: username,
