@@ -3,12 +3,15 @@ import { useState, useEffect } from "react";
 import { Project, expand_proj, utente } from "../../logica/funzioni";
 import Cookies from "js-cookie";
 import { reload } from "../User/login";
-import { baseUrl } from "../../main";
+import { baseUrl, baseUrlImg } from "../../main";
+import { set } from "mongoose";
+import { proj } from "../../components/dettagli_proj";
 const apiUrl = "get_proj_created";
 
 function My_proj() {
   history.pushState({ page: "projects" }, "", "/my_proj");
-  const [lista_tuoi_progetti, setProjects] = useState<Project[]>([]);
+  const [lista_tuoi_progetti, setProjects] = useState<proj[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Funzione asincrona per ottenere i dati e aggiornare lo stato
@@ -27,8 +30,10 @@ function My_proj() {
         );
         console.log(response);
         console.log(utente._id);
+        setLoading(false);
         setProjects(response.data);
       } catch (error: any) {
+        setLoading(false);
         console.error(
           "Errore durante il recupero dei progetti:",
           error.message
@@ -50,53 +55,66 @@ function My_proj() {
         </div>
       ) : (
         <>
-          {lista_tuoi_progetti.length === 0 ? (
-            <p style={{ textAlign: "center", paddingTop: 15 }}>
-              Qui puoi vedere i progetti che hai creato!
-              <br />
-              Crea un nuovo progetto per iniziare!
-            </p>
+          {loading ? (
+            <div className="text-center" style={{ marginTop: 80 }}>
+              <div className="spinner-border color-mod" role="status">
+                <span className="visually-hidden">Caricamento...</span>
+              </div>
+            </div>
           ) : (
-            <></>
-          )}
-          <div
-            className="row row-cols-1 row-cols-md-2 g-4 jj"
-            style={{ paddingTop: 5 }}
-          >
-            {lista_tuoi_progetti.map((item) => (
-              <>
-                <div className="col" key={item._id}>
-                  <div
-                    className="card mb-3 h-100"
-                    onClick={() => expand_proj(item._id, <My_proj />)}
-                  >
-                    {/*}
-                <img
-                  src={item.g_proj.length > 0 ? item.g_proj[0] : ""}
-                  className="card-img-top"
-                  alt=""
-                />*/}
-                    <div className="card-body">
-                      <h5 className="card-title" style={{ fontSize: 25 }}>
-                        {item.name}
-                      </h5>
-                      <p className="news-text" style={{ fontSize: 20 }}>
-                        {item.description}
-                      </p>
-                      <p className="news-text">
-                        <small
-                          className="text-body-secondary"
-                          style={{ fontSize: 15 }}
-                        >
-                          {item.category}
-                        </small>
-                      </p>
+            <>
+              {lista_tuoi_progetti.length === 0 ? (
+                <p style={{ textAlign: "center", paddingTop: 15 }}>
+                  Qui puoi vedere i progetti che hai creato!
+                  <br />
+                  Crea un nuovo progetto per iniziare!
+                </p>
+              ) : (
+                <></>
+              )}
+              <div
+                className="row row-cols-1 row-cols-md-2 g-4 jj"
+                style={{ paddingTop: 5 }}
+              >
+                {lista_tuoi_progetti.map((item) => (
+                  <>
+                    <div className="col" key={item._id}>
+                      <div
+                        className="card mb-3 h-100"
+                        onClick={() => expand_proj(item._id, <My_proj />)}
+                      >
+                        {item.images.length > 0 ? (
+                          <img
+                            src={baseUrlImg + item.images[0]}
+                            className="card-img-top"
+                            alt=""
+                          />
+                        ) : (
+                          <></>
+                        )}
+                        <div className="card-body">
+                          <h5 className="card-title" style={{ fontSize: 25 }}>
+                            {item.name}
+                          </h5>
+                          <p className="news-text" style={{ fontSize: 20 }}>
+                            {item.description}
+                          </p>
+                          <p className="news-text">
+                            <small
+                              className="text-body-secondary"
+                              style={{ fontSize: 15 }}
+                            >
+                              {item.category}
+                            </small>
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </>
-            ))}
-          </div>
+                  </>
+                ))}
+              </div>
+            </>
+          )}
         </>
       )}
     </>

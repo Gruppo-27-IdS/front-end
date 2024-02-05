@@ -63,6 +63,7 @@ function gigi() {
 function Home() {
   history.pushState({ page: "home" }, "", "/home");
   rootTopBar.render(<TopBar2 />);
+  const [loading, setLoading] = useState(true);
   const [t, setT] = useState<News[]>([]);
   const [comment, setComment] = useState<string>("");
   function submit_comment(item: News) {
@@ -155,11 +156,12 @@ function Home() {
           }
         );
         setT(response.data);
-
+        setLoading(false);
         console.log(response.data);
         // Process the response data here
       } catch (error) {
         // Handle error here
+        setLoading(false);
         console.error(error);
       }
     };
@@ -189,39 +191,47 @@ function Home() {
           </div>
         </div>
       ) : (
-        <div className="body-home jj" style={{ paddingTop: 5 }}>
-          {t.length === 0 ? (
-            <p style={{ textAlign: "center", paddingTop: 15 }}>
-              Inziare a seguire dei progetti per visualizzare le news
-            </p>
-          ) : (
-            <></>
-          )}
-          {t.map((item) => (
-            <div className="card news" key={item._id}>
-              <div className="card-body">
-                <p className="news-title">
-                  <b>{item.title}</b>
-                </p>
-                <p
-                  className="pro-tg"
-                  onClick={() => expand_proj(item.project_id, <Home />)}
-                >
-                  @{item.project_name}
-                </p>
-                <p className="news-data">
-                  {new Date(item.publish_date).toLocaleDateString("it-IT")}
-                </p>
-
-                <p className="news-text ">{item.description}</p>
-                <p
-                  className="ut-tg"
-                  onClick={() => show_profile(item.author_id, <Home />)}
-                >
-                  @{item.author}
-                </p>
+        <>
+          {loading ? (
+            <div className="text-center" style={{ marginTop: 80 }}>
+              <div className="spinner-border color-mod" role="status">
+                <span className="visually-hidden">Caricamento...</span>
               </div>
-              {/*<div
+            </div>
+          ) : (
+            <div className="body-home jj" style={{ paddingTop: 5 }}>
+              {t.length === 0 ? (
+                <p style={{ textAlign: "center", paddingTop: 15 }}>
+                  Inziare a seguire dei progetti per visualizzare le news
+                </p>
+              ) : (
+                <></>
+              )}
+              {t.map((item) => (
+                <div className="card news" key={item._id}>
+                  <div className="card-body">
+                    <p className="news-title">
+                      <b>{item.title}</b>
+                    </p>
+                    <p
+                      className="pro-tg"
+                      onClick={() => expand_proj(item.project_id, <Home />)}
+                    >
+                      @{item.project_name}
+                    </p>
+                    <p className="news-data">
+                      {new Date(item.publish_date).toLocaleDateString("it-IT")}
+                    </p>
+
+                    <p className="news-text ">{item.description}</p>
+                    <p
+                      className="ut-tg"
+                      onClick={() => show_profile(item.author_id, <Home />)}
+                    >
+                      @{item.author}
+                    </p>
+                  </div>
+                  {/*<div
                 className={
                   item.g_news.length === 0 ? "" : "image-scroll-container"
                 }
@@ -236,113 +246,119 @@ function Home() {
                   />
                 ))}
                 </div>*/}
-              <div className="interazioni">
-                <div className="interazioni-item">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="rgb(235, 182, 75)"
-                    className="bi bi-heart"
-                    viewBox="0 0 16 16"
-                    onClick={() => add_like(item, item._id)}
-                  >
-                    <path
-                      d={item.likes.includes(utente.username) ? pathD2 : pathD1}
-                      id={item._id}
-                    />
-                  </svg>
-                  <p id={item._id + "like"}>{item.likes.length}</p>
-                </div>
-                <div className="interazioni-item">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="rgb(235, 182, 75)"
-                    className="bi bi-chat"
-                    viewBox="0 0 16 16"
-                    onClick={gigi}
-                  >
-                    <path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
-                  </svg>
-                  <p>{item.comments.length}</p>
-                </div>
-                <div className="interazioni-item">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="rgb(235, 182, 75)"
-                    className="bi bi-share-fill"
-                    viewBox="0 0 16 16"
-                    onClick={() => copLink()}
-                  >
-                    <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5" />
-                  </svg>
-                </div>
-              </div>
-              <div
-                className="offcanvas offcanvas-bottom"
-                tabIndex={-1}
-                id="offcanvasBottom"
-                aria-labelledby="offcanvasBottomLabel"
-                style={{ height: 400 }}
-              >
-                <div className="offcanvas-header">
-                  <h5 className="offcanvas-title" id="offcanvasBottomLabel">
-                    Commenti
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"
-                    onClick={gigi}
-                  ></button>
-                </div>
-                <div className="offcanvas-body small">
-                  <ul className="list-group list-group-flush">
-                    {item.comments.map((x) => (
-                      <li
-                        className="list-group-item"
-                        key={item.comments.indexOf(x)}
+                  <div className="interazioni">
+                    <div className="interazioni-item">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="rgb(235, 182, 75)"
+                        className="bi bi-heart"
+                        viewBox="0 0 16 16"
+                        onClick={() => add_like(item, item._id)}
                       >
-                        <b>{x.username}</b>
-                        <br />
-                        {x.comment}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <form className="offcanvas-header sticky-bottom col-12">
-                  <input
-                    type="text"
-                    className=" form-control"
-                    onChange={(e) => setComment(e.target.value)}
-                  />
-                  <button
-                    className="btn bg-color-mod white"
-                    style={{ marginLeft: 3 }}
-                    type="submit"
-                    onClick={() => submit_comment(item)}
+                        <path
+                          d={
+                            item.likes.includes(utente.username)
+                              ? pathD2
+                              : pathD1
+                          }
+                          id={item._id}
+                        />
+                      </svg>
+                      <p id={item._id + "like"}>{item.likes.length}</p>
+                    </div>
+                    <div className="interazioni-item">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="rgb(235, 182, 75)"
+                        className="bi bi-chat"
+                        viewBox="0 0 16 16"
+                        onClick={gigi}
+                      >
+                        <path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
+                      </svg>
+                      <p>{item.comments.length}</p>
+                    </div>
+                    <div className="interazioni-item">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="rgb(235, 182, 75)"
+                        className="bi bi-share-fill"
+                        viewBox="0 0 16 16"
+                        onClick={() => copLink()}
+                      >
+                        <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    className="offcanvas offcanvas-bottom"
+                    tabIndex={-1}
+                    id="offcanvasBottom"
+                    aria-labelledby="offcanvasBottomLabel"
+                    style={{ height: 400 }}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      className="bi bi-send"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
-                    </svg>
-                  </button>
-                </form>
-              </div>
+                    <div className="offcanvas-header">
+                      <h5 className="offcanvas-title" id="offcanvasBottomLabel">
+                        Commenti
+                      </h5>
+                      <button
+                        type="button"
+                        className="btn-close"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close"
+                        onClick={gigi}
+                      ></button>
+                    </div>
+                    <div className="offcanvas-body small">
+                      <ul className="list-group list-group-flush">
+                        {item.comments.map((x) => (
+                          <li
+                            className="list-group-item"
+                            key={item.comments.indexOf(x)}
+                          >
+                            <b>{x.username}</b>
+                            <br />
+                            {x.comment}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <form className="offcanvas-header sticky-bottom col-12">
+                      <input
+                        type="text"
+                        className=" form-control"
+                        onChange={(e) => setComment(e.target.value)}
+                      />
+                      <button
+                        className="btn bg-color-mod white"
+                        style={{ marginLeft: 3 }}
+                        type="submit"
+                        onClick={() => submit_comment(item)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="currentColor"
+                          className="bi bi-send"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </>
   );
