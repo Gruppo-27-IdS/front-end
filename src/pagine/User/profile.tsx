@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 import Button_prof from "./button_profile";
 import Proj_prof from "./proj_prof";
 import { baseUrl } from "../../main";
+import { closeC } from "./create_profile";
 
-let apiUrl1 = "http://localhost:5000/api/" + "get_followed_projects";
-let apiUrl2 = "http://localhost:5000/api/" + "get_proj_created";
+let apiUrl1 = "get_followed_projects";
+let apiUrl2 = "get_proj_created";
 //esegui il logout
 export const handleLogOut = () => {
   logout();
@@ -25,23 +26,32 @@ interface proj {
   start_date: Date;
   end_date: Date;
   opensource: boolean;
+  images: string[];
 }
 
+let followed_projects: proj[];
+let created_projects: proj[];
+followed_projects = [];
+created_projects = [];
+function init_followed_projects(e: any) {
+  followed_projects = e;
+}
+function init_created_projects(e: any) {
+  created_projects = e;
+}
 //componente Profile
 function Profile() {
-  const [projectList2, setProjectList2] = useState<proj[]>([]);
-  const [projectList, setProjectList] = useState<proj[]>([]);
+  history.pushState({ page: "profile" }, "", "/profile");
+
   const [NumprojectList2, setNumProjectList2] = useState(0);
   const [NumprojectList, setNumProjectList] = useState(0);
   const [sp, setSp] = useState(utente.supported_projects);
 
   const getDati = () => {
-    setProjectList([]);
-    setProjectList2([]);
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          apiUrl1,
+          baseUrl + apiUrl1,
           {
             user_id: utente._id,
           },
@@ -51,20 +61,21 @@ function Profile() {
             },
           }
         );
-        setProjectList(response.data);
-        const response2 = await axios.post(
-          apiUrl2,
-          {
-            user_id: utente._id,
-          },
-          {
-            headers: {
-              token: Cookies.get("authToken"),
-            },
-          }
-        );
-        setProjectList2(response2.data);
 
+        const response2 = await axios.post(
+          baseUrl + apiUrl2,
+          {
+            user_id: utente._id,
+          },
+          {
+            headers: {
+              token: Cookies.get("authToken"),
+            },
+          }
+        );
+
+        init_followed_projects(response.data);
+        init_created_projects(response2.data);
         setNumProjectList(response.data.length);
         setNumProjectList2(response2.data.length);
 
@@ -109,6 +120,26 @@ function Profile() {
         <Login></Login>
       ) : (
         <>
+          <div
+            className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+            aria-live="assertive"
+            aria-atomic="true"
+            id="toast"
+            style={{ zIndex: 1010, top: 65 }}
+          >
+            <div className="d-flex">
+              <div className="toast-body" id="mess-text">
+                Hello, world! This is a toast message.
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+                onClick={closeC}
+              ></button>
+            </div>
+          </div>
           <div className="header-profile">
             <h1>
               <b>
@@ -165,7 +196,7 @@ function Profile() {
               className="dati-profilo-item"
               onClick={() =>
                 root.render(
-                  <Proj_prof list={projectList2} comp={<Profile />} />
+                  <Proj_prof list={created_projects} comp={<Profile />} />
                 )
               }
             >
@@ -181,7 +212,9 @@ function Profile() {
             <div
               className="dati-profilo-item"
               onClick={() =>
-                root.render(<Proj_prof list={projectList} comp={<Profile />} />)
+                root.render(
+                  <Proj_prof list={followed_projects} comp={<Profile />} />
+                )
               }
             >
               <div className="dati-profilo-numero">
@@ -193,7 +226,7 @@ function Profile() {
                 </b>
               </p>
             </div>
-            <div className="dati-profilo-item" onClick={alert_butt}>
+            <div className="dati-profilo-item">
               <div className="dati-profilo-numero">
                 <b>{sp}</b>
               </div>

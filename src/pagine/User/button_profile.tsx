@@ -1,32 +1,47 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { alert_butt, utente } from "../../logica/funzioni";
-import { root } from "../../main";
+import { baseUrl, root } from "../../main";
 import { handleLogOut } from "./profile";
 import Update_profile from "./update_profile";
 import Login from "./login";
-let apiUrl = "http://localhost:5000/api/remove_user";
-function Button_prof() {
-  const handleDelete = () => {
-    const fetchData = async () => {
-      try {
-        var data = { id: utente._id };
-        var header = { token: Cookies.get("authToken") };
-        const response = await axios.delete(
-          apiUrl,
+let apiUrl = "remove_user";
+const handleDelete = () => {
+  const fetchData = async () => {
+    try {
+      var data = { id: utente._id };
+      var header = { token: Cookies.get("authToken") };
+      const response = await axios.delete(
+        baseUrl + apiUrl,
 
-          {
-            data: data,
-            headers: header,
-          }
-        );
+        {
+          data: data,
+          headers: header,
+        }
+      );
+      document.getElementById("mess-text")!.innerHTML =
+        "Account eliminato con successo";
+      document.getElementById("toast")!.classList.remove("text-bg-danger");
+      document.getElementById("toast")!.classList.add("text-bg-success");
+      document.getElementById("toast")!.classList.add("show");
+      setTimeout(() => {
         handleLogOut();
-      } catch (error: any) {
-        console.error("Errore durante l'eliminazione:", error.message);
-      }
-    };
-    fetchData();
+      }, 500);
+    } catch (error: any) {
+      document.getElementById("mess-text")!.innerHTML =
+        "Qualcosa è andato storto";
+      document.getElementById("toast")!.classList.add("show");
+    }
   };
+  fetchData();
+};
+function f_prompt() {
+  var x = window.confirm("Sei sicuro di voler eliminare l'account?");
+  if (x) {
+    handleDelete();
+  }
+}
+function Button_prof() {
   return (
     <div className="ls-bt" style={{ paddingBottom: 70 }}>
       <div className="d-grid gap-3 ">
@@ -101,7 +116,7 @@ function Button_prof() {
           className="btn btn-danger white btn-mod-2 d-flex justify-content-between"
           href="#"
           role="button"
-          onClick={() => handleDelete()}
+          onClick={() => f_prompt()}
         >
           <p></p>
           <b>Elimina Profilo</b>

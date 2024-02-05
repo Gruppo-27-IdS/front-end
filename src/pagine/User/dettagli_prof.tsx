@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { root, rootTopBar } from "../../main";
+import { baseUrl, root, rootTopBar } from "../../main";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Proj_prof from "./proj_prof";
 import { Project, alert_butt } from "../../logica/funzioni";
 import TopBar from "../top-bar";
-const apiUrl = "http://localhost:5000/api/get_user_by_id";
-let apiUrl1 = "http://localhost:5000/api/get_followed_projects";
-let apiUrl2 = "http://localhost:5000/api/get_proj_created";
+const apiUrl = "get_user_by_id";
+let apiUrl1 = "get_followed_projects";
+let apiUrl2 = "get_proj_created";
 
 interface DettProfInt {
   id: string;
@@ -38,6 +38,7 @@ let t2: proj[];
 let t1: proj[];
 
 const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
+  history.pushState({ page: "dettagli_prof" }, "", "/aboutProfile");
   rootTopBar.render(<TopBar />);
   const [user, setUser] = useState<User>({
     username: "",
@@ -48,17 +49,14 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
     age: 0,
     supported_projects: 0,
   });
-  const [projectList2, setProjectList2] = useState<proj[]>([]);
-  const [projectList, setProjectList] = useState<proj[]>([]);
+
   const [NumprojectList2, setNumProjectList2] = useState(0);
   const [NumprojectList, setNumProjectList] = useState(0);
   const getDati = () => {
-    setProjectList([]);
-    setProjectList2([]);
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          apiUrl1,
+          baseUrl + apiUrl1,
           {
             user_id: id,
           },
@@ -68,10 +66,9 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
             },
           }
         );
-        setProjectList(response.data);
 
         const response2 = await axios.post(
-          apiUrl2,
+          baseUrl + apiUrl2,
           {
             user_id: id,
           },
@@ -81,7 +78,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
             },
           }
         );
-        setProjectList2(response2.data);
+
         t2 = response2.data;
         t1 = response.data;
         setNumProjectList(response.data.length);
@@ -103,7 +100,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          apiUrl,
+          baseUrl + apiUrl,
           {
             id: id,
           },
@@ -244,10 +241,7 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
             </b>
           </p>
         </div>
-        <div
-          className="dati-profilo-item"
-          onClick={() => console.log(user.supported_projects)}
-        >
+        <div className="dati-profilo-item">
           <div className="dati-profilo-numero">
             <b>{user.supported_projects}</b>
           </div>

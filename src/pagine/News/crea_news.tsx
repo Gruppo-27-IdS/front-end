@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { utente } from "../../logica/funzioni";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { root } from "../../main";
-const apiUrl = "http://localhost:5000/api/add_news";
+import { baseUrl, root } from "../../main";
+const apiUrl = "add_news";
 interface CreaNewsProps {
   inputString: string;
   comp: JSX.Element;
 }
 
 const Crea_news: React.FC<CreaNewsProps> = ({ inputString, comp }) => {
+  history.pushState({ page: "crea_news" }, "", "/createNews");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -17,7 +18,7 @@ const Crea_news: React.FC<CreaNewsProps> = ({ inputString, comp }) => {
     async function fetchData() {
       try {
         const response = await axios.post(
-          apiUrl,
+          baseUrl + apiUrl,
           {
             description: description,
             title: title,
