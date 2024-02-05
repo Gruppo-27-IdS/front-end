@@ -49,6 +49,17 @@ function copLink() {
   document.body.removeChild(hiddenElement);
 }
 
+function gigi() {
+  const element = document.getElementById("offcanvasBottom");
+
+  if (element) {
+    if (element.classList.contains("show")) {
+      element.classList.remove("show");
+    } else {
+      element.classList.add("show");
+    }
+  }
+}
 function Home() {
   history.pushState({ page: "home" }, "", "/home");
   rootTopBar.render(<TopBar2 />);
@@ -81,18 +92,6 @@ function Home() {
     };
     fetchData();
     setComment("");
-  }
-
-  function gigi() {
-    const element = document.getElementById("offcanvasBottom");
-
-    if (element) {
-      if (element.classList.contains("show")) {
-        element.classList.remove("show");
-      } else {
-        element.classList.add("show");
-      }
-    }
   }
 
   function add_like(item: News, e: string) {

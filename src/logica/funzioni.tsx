@@ -230,7 +230,11 @@ export const show_profile = (id: string, comp: JSX.Element) => {
 };
 
 export const alert_butt = () => {
-  alert("funzione non ancora implementata");
+  document.getElementById("mess-text")!.innerHTML =
+    "Funzione in fase di sviluppo";
+  document.getElementById("toast")!.classList.remove("text-bg-danger");
+  document.getElementById("toast")!.classList.add("text-bg-secondary");
+  document.getElementById("toast")!.classList.add("show");
 };
 
 export const eliminaProgetto = (id: string) => {

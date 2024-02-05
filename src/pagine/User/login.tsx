@@ -4,7 +4,7 @@ import { utente } from "../../logica/funzioni";
 import Profile from "./profile";
 import Cookies from "js-cookie";
 import { baseUrl, root } from "../../main";
-import Create_profile from "./create_profile";
+import Create_profile, { closeC } from "./create_profile";
 import { proj } from "../../components/dettagli_proj";
 const apiUrl = "login_user";
 
@@ -58,19 +58,16 @@ function Login() {
           username: username,
           password: password,
         });
-        console.log(response.data);
+
         if (response.data.message === "Login riuscito") {
           Cookies.set("authToken", response.data.token);
           init(response.data.user);
           setIsLoggedIn(true);
         }
       } catch (error: any) {
-        console.error(
-          "Errore durante il log-in:",
-          error.message,
-          error.response.data.message
-        );
-        alert(error.response.data.message);
+        document.getElementById("mess-text")!.innerHTML =
+          error.response.data.message;
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -90,6 +87,26 @@ function Login() {
   }
   return (
     <>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Hello, world! This is a toast message.
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
       <div className="jj" style={{ paddingTop: 30 }}>
         <div className="mb-3">
           <label htmlFor="exampleFormControlInput1" className="form-label">
@@ -113,10 +130,6 @@ function Login() {
             aria-describedby="passwordHelpBlock"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div id="passwordHelpBlock" className="form-text">
-            Your password must be 7-20 characters long, contain letters and
-            numbers, and must not contain spaces, special characters, or emoji.
-          </div>
         </div>
         <div className="ls-bt">
           <a

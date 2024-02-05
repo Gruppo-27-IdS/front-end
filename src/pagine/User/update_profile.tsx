@@ -5,6 +5,7 @@ import { utente } from "../../logica/funzioni";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { baseUrl } from "../../main";
+import { closeC } from "./create_profile";
 const apiUrl = "update_user";
 
 function Update_profile() {
@@ -12,7 +13,7 @@ function Update_profile() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState(utente.username);
   const [email, setEmail] = useState(utente.email);
-  const [age, setAge] = useState(utente.age.toString());
+  const [age, setAge] = useState(utente.age);
   const [phone, setPhone] = useState(utente.phone);
   const [name, setName] = useState(utente.name);
   const [surname, setSurname] = useState(utente.surname);
@@ -22,6 +23,29 @@ function Update_profile() {
         let pswNuova = password;
         if (password === "") {
           pswNuova = utente.password;
+        }
+        if (
+          username === "" ||
+          pswNuova === "" ||
+          email === "" ||
+          age === null ||
+          phone === "" ||
+          name === "" ||
+          surname === ""
+        ) {
+          throw {
+            response: {
+              data: { message: "Compila il campo che hai cancellato" },
+            },
+          };
+        }
+        if (age < 12 || age > 120) {
+          throw { response: { data: { message: "Età non valida" } } };
+        }
+        if (phone.length < 10 || phone.length > 13) {
+          throw {
+            response: { data: { message: "Numero di telefono non valido" } },
+          };
         }
         const response = await axios.post(
           baseUrl + apiUrl,
@@ -37,15 +61,6 @@ function Update_profile() {
           },
           { headers: { token: Cookies.get("authToken") } }
         );
-        console.log(
-          name,
-          surname,
-          username,
-          phone,
-          email,
-          age,
-          utente.password
-        );
 
         if (response.data.message === "User Updated Successfully") {
           utente.username = username;
@@ -53,19 +68,58 @@ function Update_profile() {
           utente.surname = surname;
           utente.email = email;
           utente.phone = phone;
-          utente.age = parseInt(age);
+          utente.age = age;
           utente.password = pswNuova;
 
-          root.render(<Profile />);
+          document.getElementById("mess-text")!.innerHTML =
+            "Dati aggiornati con successo";
+          document.getElementById("toast")!.classList.remove("text-bg-danger");
+          document.getElementById("toast")!.classList.add("text-bg-success");
+          document.getElementById("toast")!.classList.add("show");
+          setTimeout(() => {
+            root.render(<Profile />);
+          }, 500);
         }
       } catch (error: any) {
-        console.error("Errore durante la modifica:", error.message);
+        if (
+          error.response.data.message === "password is not valid" ||
+          error.response.data.message ===
+            "Compila il campo che hai cancellato" ||
+          error.response.data.message === "Età non valida" ||
+          error.response.data.message === "Numero di telefono non valido"
+        )
+          document.getElementById("mess-text")!.innerHTML =
+            error.response.data.message;
+        else
+          document.getElementById("mess-text")!.innerHTML =
+            "Qualcosa è andato storto";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
   };
   return (
     <>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Hello, world! This is a toast message.
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
       <button
         type="button"
         className="btn-close p-10"
@@ -73,7 +127,7 @@ function Update_profile() {
         onClick={() => root.render(<Profile />)}
       ></button>
       <div className="jj">
-        <form className="row g-3 jj">
+        <div className="row g-3 jj">
           <div className="col-md-6 ">
             <label htmlFor="inputName" className="form-label">
               Nome
@@ -154,7 +208,7 @@ function Update_profile() {
               className="form-control"
               id="inputAge"
               defaultValue={utente.age}
-              onChange={(e) => setAge(e.target.value)}
+              onChange={(e) => setAge(Number(e.target.value))}
             />
           </div>
           <div className="col-12 d-flex justify-content-center">
@@ -165,7 +219,7 @@ function Update_profile() {
               Modifica
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </>
   );

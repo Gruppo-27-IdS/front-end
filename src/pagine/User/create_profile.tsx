@@ -14,13 +14,32 @@ function Create_profile() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState(0);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const create_prof = () => {
     const fetchData = async () => {
       try {
+        if (
+          username === "" ||
+          password === "" ||
+          email === "" ||
+          age === null ||
+          phone === "" ||
+          name === "" ||
+          surname === ""
+        ) {
+          throw { response: { data: { message: "Compila tutti i campi" } } };
+        }
+        if (age < 12 || age > 120) {
+          throw { response: { data: { message: "Età non valida" } } };
+        }
+        if (phone.length < 10 || phone.length > 13) {
+          throw {
+            response: { data: { message: "Numero di telefono non valido" } },
+          };
+        }
         const response = await axios.post(baseUrl + apiUrl, {
           username: username,
           name: name,
@@ -30,28 +49,36 @@ function Create_profile() {
           email: email,
           password: password,
         });
+
         if (response.data.message === "User Added Successfully") {
           try {
             const response = await axios.post(baseUrl + "login_user", {
               username: username,
               password: password,
             });
-            console.log(response.data);
+
             if (response.data.message === "Login riuscito") {
               Cookies.set("authToken", response.data.token);
               init(response.data.user);
+              root.render(<Profile />);
             }
           } catch (error: any) {
-            console.error("Errore durante il log-in:", error.message);
+            document.getElementById("mess-text")!.innerHTML =
+              "Qualcosa è andato storto";
+            document.getElementById("toast")!.classList.add("show");
           }
-          root.render(<Profile />);
         } else {
           document.getElementById("mess-text")!.innerHTML =
             "Errore durante la registrazione";
           document.getElementById("toast")!.classList.add("show");
         }
       } catch (error: any) {
-        if (error.response.data.message === "password is not valid")
+        if (
+          error.response.data.message === "Compila tutti i campi" ||
+          error.response.data.message === "Età non valida" ||
+          error.response.data.message === "Numero di telefono non valido" ||
+          error.response.data.message === "password is not valid"
+        )
           document.getElementById("mess-text")!.innerHTML =
             error.response.data.message;
         else if (error.response.data.message.includes("email"))
@@ -62,7 +89,6 @@ function Create_profile() {
         } else
           document.getElementById("mess-text")!.innerHTML =
             "Errore durante la registrazione";
-        console.error("Errore durante la registrazione:", error);
         document.getElementById("toast")!.classList.add("show");
       }
     };
@@ -71,10 +97,11 @@ function Create_profile() {
   return (
     <>
       <div
-        className="toast position-relative top-0 start-50 translate-middle-x text-bg-danger"
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
         aria-live="assertive"
         aria-atomic="true"
         id="toast"
+        style={{ zIndex: 1000, top: 65 }}
       >
         <div className="d-flex">
           <div className="toast-body" id="mess-text">
@@ -95,7 +122,7 @@ function Create_profile() {
         aria-label="Close"
         onClick={() => root.render(<Profile />)}
       ></button>
-      <form className="row g-3 jj">
+      <div className="row g-3 jj">
         <div className="col-md-6 ">
           <label htmlFor="inputName" className="form-label">
             Nome
@@ -134,7 +161,7 @@ function Create_profile() {
             Telefono
           </label>
           <input
-            type="text"
+            type="tel"
             className="form-control"
             id="inputPhone"
             onChange={(e) => setPhone(e.target.value)}
@@ -171,7 +198,7 @@ function Create_profile() {
             type="number"
             className="form-control"
             id="inputAge"
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e) => setAge(Number(e.target.value))}
           />
         </div>
         <div className="col-12 d-flex justify-content-center">
@@ -182,7 +209,7 @@ function Create_profile() {
             Registrati
           </button>
         </div>
-      </form>
+      </div>
     </>
   );
 }

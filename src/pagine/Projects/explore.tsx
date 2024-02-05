@@ -30,7 +30,7 @@ function Exp() {
       if (Cookies.get("authToken") === undefined) {
         apiUrl1 = "get_all_projects";
         try {
-          const response = await axios.get(apiUrl1);
+          const response = await axios.get(baseUrl + apiUrl1);
           setProjectList(response.data);
         } catch (error: any) {
           console.error("Errore durante il recupero dei dati esplora:", error);

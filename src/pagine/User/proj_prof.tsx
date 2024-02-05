@@ -1,5 +1,5 @@
 import { expand_proj } from "../../logica/funzioni";
-import { root } from "../../main";
+import { baseUrl, baseUrlImg, root } from "../../main";
 
 interface DettProfInt {
   list: proj[];
@@ -14,11 +14,12 @@ interface proj {
   start_date: Date;
   end_date: Date;
   opensource: boolean;
+  images: string[];
 }
 
 const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
   history.pushState({ page: "proj_prof" }, "", "/listaProgetti");
-  console.log(list);
+
   return (
     <>
       <button
@@ -27,12 +28,16 @@ const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
         aria-label="Close"
         onClick={() => root.render(comp)}
       ></button>
-      <div
-        className="row row-cols-1 row-cols-md-2 g-4 jj"
-        style={{ paddingTop: 5 }}
-      >
-        {list.map((item) => (
-          <>
+      {list.length === 0 ? (
+        <p style={{ textAlign: "center", paddingTop: 15 }}>
+          Non ci sono progetti o riprova
+        </p>
+      ) : (
+        <div
+          className="row row-cols-1 row-cols-md-2 g-4 jj"
+          style={{ paddingTop: 5 }}
+        >
+          {list.map((item) => (
             <div className="col" key={item._id}>
               <div
                 className="card mb-3 h-100"
@@ -40,12 +45,16 @@ const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
                   expand_proj(item._id, <Proj_prof list={list} comp={comp} />)
                 }
               >
-                {/*}
+                {item.images.length > 0 ? (
                   <img
-                    src={item.g_proj.length > 0 ? item.g_proj[0] : ""}
+                    src={baseUrlImg + item.images[0]}
                     className="card-img-top"
                     alt=""
-                  />*/}
+                  />
+                ) : (
+                  <></>
+                )}
+
                 <div className="card-body">
                   <h5 className="card-title" style={{ fontSize: 25 }}>
                     {item.name}
@@ -64,9 +73,9 @@ const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
                 </div>
               </div>
             </div>
-          </>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </>
   );
 };

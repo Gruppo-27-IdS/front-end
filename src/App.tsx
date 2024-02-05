@@ -7,12 +7,6 @@ import Login from "./pagine/User/login";
 import Titti from "./components/supporta";
 const startingLocation = window.location.pathname;
 function App() {
-  if (startingLocation === "/home") {
-    return <Home></Home>;
-  }
-  if (startingLocation === "/login") {
-    return <Login></Login>;
-  }
   return <Home></Home>;
 }
 
