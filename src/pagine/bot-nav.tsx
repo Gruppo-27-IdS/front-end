@@ -76,6 +76,7 @@ function BottomNav() {
             <div
               className="nav-link"
               onClick={(e) => handleClick("projects", e)}
+              id="projects"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

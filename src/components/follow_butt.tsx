@@ -25,9 +25,10 @@ const FollowButton = ({ str }: { str: string }) => {
             },
           }
         );
-        console.log(response1.data);
       } catch (error: any) {
-        console.error("Errore durante nel follow:", error.message);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -44,9 +45,10 @@ const FollowButton = ({ str }: { str: string }) => {
           data: data,
           headers: header,
         });
-        console.log(response1.data);
       } catch (error: any) {
-        console.error("Errore durante nel follow:", error.message);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -68,14 +70,12 @@ const FollowButton = ({ str }: { str: string }) => {
             },
           }
         );
-        console.log(response1.data);
 
         response1.data.forEach((element: proj) => {
           if (element._id === str) {
             setIsFollowing(true);
           }
         });
-        console.log(isFollowing);
       } catch (error: any) {
         console.error("Errore durante la creazione lista:", error.message);
       }

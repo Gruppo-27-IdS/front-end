@@ -42,7 +42,7 @@ function init_created_projects(e: any) {
 //componente Profile
 function Profile() {
   history.pushState({ page: "profile" }, "", "/profile");
-
+  const [loading, setLoading] = useState(true);
   const [NumprojectList2, setNumProjectList2] = useState(0);
   const [NumprojectList, setNumProjectList] = useState(0);
   const [sp, setSp] = useState(utente.supported_projects);
@@ -78,14 +78,19 @@ function Profile() {
         init_created_projects(response2.data);
         setNumProjectList(response.data.length);
         setNumProjectList2(response2.data.length);
-
+        setLoading(false);
         localStorage.setItem("NumprojectList", response.data.length.toString());
         localStorage.setItem(
           "NumprojectList2",
           response2.data.length.toString()
         );
       } catch (error: any) {
-        console.error("Errore durante il recupero dei dati:", error.message);
+        setLoading(false);
+        if (Cookies.get("authToken")) {
+          document.getElementById("mess-text")!.innerHTML =
+            "Qualcosa è andato storto";
+          document.getElementById("toast")!.classList.add("show");
+        }
       }
     };
     fetchData();
@@ -116,30 +121,44 @@ function Profile() {
   }, []);
   return (
     <>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Hello, world! This is a toast message.
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
       {reload() ? (
         <Login></Login>
       ) : (
         <>
-          <div
-            className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
-            aria-live="assertive"
-            aria-atomic="true"
-            id="toast"
-            style={{ zIndex: 1010, top: 65 }}
-          >
-            <div className="d-flex">
-              <div className="toast-body" id="mess-text">
-                Hello, world! This is a toast message.
+          {loading ? (
+            <div
+              className="text-center position-fixed top-50 start-50 translate-middle"
+              style={{
+                zIndex: 3000,
+              }}
+            >
+              <div className="spinner-border color-mod" role="status">
+                <span className="visually-hidden">Caricamento...</span>
               </div>
-              <button
-                type="button"
-                className="btn-close btn-close-white me-2 m-auto"
-                data-bs-dismiss="toast"
-                aria-label="Close"
-                onClick={closeC}
-              ></button>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
           <div className="header-profile">
             <h1>
               <b>

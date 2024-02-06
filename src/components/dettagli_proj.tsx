@@ -9,6 +9,8 @@ import Crea_news from "../pagine/News/crea_news";
 import Comp from "./gg";
 import { baseUrl } from "../main";
 import TopBar from "../pagine/top-bar";
+import { closeC } from "../pagine/User/create_profile";
+import { set } from "mongoose";
 const apiUrl = "get_proj_by_id";
 const apiUrl1 = "get_user_role";
 const apiUrl3 = "get_collabs_from_proj";
@@ -52,6 +54,7 @@ export interface proj {
 
 const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
   rootTopBar.render(<TopBar />);
+  const [loading, setLoading] = useState(true);
   let project = {
     _id: "",
     name: "",
@@ -127,8 +130,6 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
             collaboratori = [];
           }
 
-          console.log(project.user);
-          console.log(response2.data.role_id);
           livello = response2.data.role_id;
 
           root.render(
@@ -140,6 +141,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
             />
           );
         } catch (error: any) {
+          setLoading(false);
           root.render(
             <Comp
               comp={comp}
@@ -150,7 +152,10 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
           );
         }
       } catch (error: any) {
-        console.error("Errore durante il recupero dei dati:", error.message);
+        setLoading(false);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -160,7 +165,55 @@ const MyComponent: React.FC<MyComponentProps> = ({ parametroNumero, comp }) => {
     get_dati();
   }, []);
 
-  return <></>;
+  return (
+    <>
+      {loading ? (
+        <div className="text-center" style={{ marginTop: 80 }}>
+          <div className="spinner-border color-mod" role="status">
+            <span className="visually-hidden">Caricamento...</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div
+            className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+            aria-live="assertive"
+            aria-atomic="true"
+            id="toast"
+            style={{ zIndex: 1010, top: 65 }}
+          >
+            <div className="d-flex">
+              <div className="toast-body" id="mess-text">
+                Hello, world! This is a toast message.
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+                onClick={closeC}
+              ></button>
+            </div>
+          </div>
+          <div className="jj d-flex justify-content-center">
+            <a
+              className="btn bg-color-mod white btn-mod-2 "
+              href="#"
+              role="button"
+              style={{ marginTop: 150 }}
+              onClick={() =>
+                root.render(
+                  <MyComponent parametroNumero={parametroNumero} comp={comp} />
+                )
+              }
+            >
+              <b>Ricarica</b>
+            </a>
+          </div>
+        </>
+      )}
+    </>
+  );
 };
 
 export default MyComponent;

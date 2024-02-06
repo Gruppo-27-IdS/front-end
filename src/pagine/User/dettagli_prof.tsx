@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import Proj_prof from "./proj_prof";
 import { Project, alert_butt } from "../../logica/funzioni";
 import TopBar from "../top-bar";
+import { closeC } from "./create_profile";
 const apiUrl = "get_user_by_id";
 let apiUrl1 = "get_followed_projects";
 let apiUrl2 = "get_proj_created";
@@ -90,7 +91,11 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
           response2.data.length.toString()
         );
       } catch (error: any) {
-        console.error("Errore durante il recupero dei dati:", error.message);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto nel recupero dei dati";
+        document.getElementById("toast")!.classList.remove("text-bg-seconday");
+        document.getElementById("toast")!.classList.add("text-bg-danger");
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -120,7 +125,11 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
           supported_projects: response.data.supported_projects,
         });
       } catch (error: any) {
-        console.error("Errore durante il recupero dei dati:", error.message);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto nel recupero dei dati";
+        document.getElementById("toast")!.classList.remove("text-bg-seconday");
+        document.getElementById("toast")!.classList.add("text-bg-danger");
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -149,6 +158,26 @@ const Dettagli_prof: React.FC<DettProfInt> = ({ id, comp }) => {
         aria-label="Close"
         onClick={() => root.render(comp)}
       ></button>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger "
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Errore
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
       <div className="header-profile">
         <h1>
           <b>

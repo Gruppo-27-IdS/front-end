@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { root } from "../main";
+import Cookies from "js-cookie";
 
 type MessageProps = {
   comp: JSX.Element;
@@ -21,10 +22,18 @@ function Message({ comp }: MessageProps) {
         }}
       ></button>
       <div className="list-group jj">
-        <h5 style={{ textAlign: "center" }}>Messaggi: </h5>
-        <p style={{ textAlign: "center" }}>
-          Ehi! Qui non sembra esserci nessun messaggio
-        </p>
+        <h5 style={{ textAlign: "center" }}>
+          <b>Messaggi:</b>{" "}
+        </h5>
+        {Cookies.get("authToken") ? (
+          <p style={{ textAlign: "center" }}>
+            Ehi! Qui non sembra esserci nessun messaggio
+          </p>
+        ) : (
+          <p style={{ textAlign: "center" }}>
+            Devi fare il login per visualizzare i tuoi messaggi
+          </p>
+        )}
       </div>
     </>
   );

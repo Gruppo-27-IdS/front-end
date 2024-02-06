@@ -1,5 +1,5 @@
 import { proj } from "./dettagli_proj";
-import { eliminaProgetto } from "../logica/funzioni";
+import { alert_butt, eliminaProgetto } from "../logica/funzioni";
 
 interface ManagerButtonProps {
   proj: proj;
@@ -12,6 +12,7 @@ function ManagerButton({ proj }: ManagerButtonProps) {
         className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
         href="#"
         role="button"
+        onClick={alert_butt}
       >
         <b>Modifica Progetto</b>
       </a>
@@ -20,6 +21,7 @@ function ManagerButton({ proj }: ManagerButtonProps) {
         className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
         href="#"
         role="button"
+        onClick={alert_butt}
       >
         <b>Richieste di partecipazione</b>
       </a>

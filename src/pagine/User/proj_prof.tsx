@@ -1,5 +1,6 @@
 import { expand_proj } from "../../logica/funzioni";
 import { baseUrl, baseUrlImg, root } from "../../main";
+import { closeC } from "./create_profile";
 
 interface DettProfInt {
   list: proj[];
@@ -22,6 +23,26 @@ const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
 
   return (
     <>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Errore
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
       <button
         type="button"
         className="btn-close p-10"
@@ -59,7 +80,10 @@ const Proj_prof: React.FC<DettProfInt> = ({ list, comp }) => {
                   <h5 className="card-title" style={{ fontSize: 25 }}>
                     {item.name}
                   </h5>
-                  <p className="news-text" style={{ fontSize: 20 }}>
+                  <p
+                    className="news-text text-truncate"
+                    style={{ fontSize: 20 }}
+                  >
                     {item.description}
                   </p>
                   <p className="news-text">
