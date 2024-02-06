@@ -6,6 +6,7 @@ import { baseUrl, root } from "../../main";
 import Profile from "./profile";
 
 export function closeC() {
+  document.getElementById("toast")!.classList.add("text-bg-danger");
   document.getElementById("toast")!.classList.remove("show");
 }
 const apiUrl = "add_user";

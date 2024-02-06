@@ -8,6 +8,9 @@ import MyComponent from "../../components/dettagli_proj";
 import My_proj from "./my_proj";
 import { closeC } from "../User/create_profile";
 const apiUrl = "add_project";
+const apiUrl2 = "upload_proj_images";
+let n = 0;
+let files: any;
 function Plus() {
   history.pushState({ page: "plus" }, "", "/plus");
   const [name, setName] = useState("");
@@ -17,11 +20,10 @@ function Plus() {
   const [end_date, setEnd_date] = useState(new Date(""));
   const [opensource, setOpensource] = useState(false);
   const [manager, setManager] = useState(utente.username);
-  const [files, setFiles] = useState<File[]>([]);
+
   const handleFileChange = (e: any) => {
-    // Ottenere la lista di file selezionati
-    const selectedFiles = Array.from(e.target.files) as File[];
-    setFiles(selectedFiles);
+    files = e.target.files;
+    n = e.target.files.length;
   };
 
   const crea_pj = () => {
@@ -57,6 +59,31 @@ function Plus() {
         );
 
         if (response.data.message === "Project added successfully") {
+          async function uploadFiles() {
+            try {
+              for (let i = 0; i < n; i++) {
+                const formData = new FormData();
+                formData.append(`image`, files[i]);
+                formData.append("project_id", response.data.project_id);
+
+                const response2 = await axios.post(
+                  baseUrl + apiUrl2,
+                  formData,
+                  {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                      token: Cookies.get("authToken"),
+                    },
+                  }
+                );
+              }
+            } catch (error: any) {
+              document.getElementById("mess-text")!.innerHTML =
+                "Errore nel caricamento dei file";
+              document.getElementById("toast")!.classList.add("show");
+            }
+          }
+          uploadFiles();
           const allNavLinks = document.querySelectorAll(".nav-link");
           allNavLinks.forEach((link) => link.classList.remove("active"));
           document.getElementById("projects")!.classList.add("active");

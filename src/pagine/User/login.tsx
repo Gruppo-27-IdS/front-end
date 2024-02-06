@@ -14,7 +14,6 @@ export function reload() {
   const userData = localStorage.getItem("user");
   if (userData) {
     init(JSON.parse(userData));
-    console.log(utente);
     return false;
   }
   return true;
