@@ -13,7 +13,7 @@ import { reload } from "../User/login";
 import Cookies from "js-cookie";
 import { set } from "mongoose";
 import { baseUrl, baseUrlImg, rootTopBar } from "../../main";
-import TopBar2 from "../top-bar2";
+import TopBar2 from "../../components/top-bar2";
 import { closeC } from "../User/create_profile";
 let apiUrl = "get_news_followed";
 let apiUrl1 = "add_or_remove_like";

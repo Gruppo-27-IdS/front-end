@@ -1,15 +1,15 @@
 import { Fragment } from "react";
-import Home from "./News/home";
+import Home from "../pagine/News/home";
 import ReactDOM from "react-dom";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { useEffect } from "react";
 import TopBar from "./top-bar";
 import { handleClick } from "../logica/funzioni";
-import Profile from "./User/profile";
-import Exp from "./Projects/explore";
-import Plus from "./Projects/plus";
-import My_proj from "./Projects/my_proj";
+import Profile from "../pagine/User/profile";
+import Exp from "../pagine/Projects/explore";
+import Plus from "../pagine/Projects/plus";
+import My_proj from "../pagine/Projects/my_proj";
 
 function BottomNav() {
   return (

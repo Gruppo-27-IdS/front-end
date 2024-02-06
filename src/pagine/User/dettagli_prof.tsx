@@ -4,7 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Proj_prof from "./proj_prof";
 import { Project, alert_butt } from "../../logica/funzioni";
-import TopBar from "../top-bar";
+import TopBar from "../../components/top-bar";
 import { closeC } from "./create_profile";
 const apiUrl = "get_user_by_id";
 let apiUrl1 = "get_followed_projects";
