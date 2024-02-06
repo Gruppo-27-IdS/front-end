@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { root } from "../main";
 
 function Notif({ comp }: { comp: JSX.Element }) {
@@ -15,17 +16,25 @@ function Notif({ comp }: { comp: JSX.Element }) {
         }}
       ></button>
       <div className="list-group jj">
-        <h5 style={{ textAlign: "center" }}>Notifiche: </h5>
-        {l.map((item) => (
-          <button
-            type="button"
-            className="list-group-item list-group-item-action "
-            aria-current="true"
-            style={{ fontSize: 18 }}
-          >
-            {item}
-          </button>
-        ))}
+        <h5 style={{ textAlign: "center" }}>
+          <b>Notifiche: </b>
+        </h5>
+        {Cookies.get("authToken") ? (
+          <>
+            {l.map((item) => (
+              <button
+                type="button"
+                className="list-group-item list-group-item-action "
+                aria-current="true"
+                style={{ fontSize: 18 }}
+              >
+                {item}
+              </button>
+            ))}
+          </>
+        ) : (
+          <p>Devi fare il login per visualizzare le notifiche</p>
+        )}
       </div>
     </>
   );

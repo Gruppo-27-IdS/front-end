@@ -248,7 +248,11 @@ export const eliminaProgetto = (id: string) => {
       });
       root.render(<My_proj />);
     } catch (error: any) {
-      console.error("Errore durante l'eliminazione:", error.message);
+      document.getElementById("mess-text")!.innerHTML =
+        "Errore durante l'eliminazione del progetto";
+      document.getElementById("toast")!.classList.remove("text-bg-secondary");
+      document.getElementById("toast")!.classList.add("text-bg-danger");
+      document.getElementById("toast")!.classList.add("show");
     }
   };
   fetchData();

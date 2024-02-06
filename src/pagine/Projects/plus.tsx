@@ -17,17 +17,27 @@ function Plus() {
   const [end_date, setEnd_date] = useState(new Date(""));
   const [opensource, setOpensource] = useState(false);
   const [manager, setManager] = useState(utente.username);
+  const [files, setFiles] = useState<File[]>([]);
+  const handleFileChange = (e: any) => {
+    // Ottenere la lista di file selezionati
+    const selectedFiles = Array.from(e.target.files) as File[];
+    setFiles(selectedFiles);
+  };
+
   const crea_pj = () => {
     async function fetchData() {
-      if (end_date != new Date("")) {
-        if (end_date < start_date) {
-          document.getElementById("mess-text")!.innerHTML =
-            "La data di fine progetto non può essere precedente a quella di inizio";
-
-          document.getElementById("toast")!.classList.add("show");
-        }
-      }
       try {
+        if (name === "" || description === "" || category === "") {
+          throw { message: "Compila tutti i campi obbligatori" };
+        }
+        if (end_date != new Date("")) {
+          if (end_date < start_date) {
+            throw {
+              message:
+                "La data di fine progetto non può essere precedente a quella di inizio",
+            };
+          }
+        }
         const response = await axios.post(
           baseUrl + apiUrl,
           {
@@ -45,8 +55,12 @@ function Plus() {
             },
           }
         );
-        console.log(response.data);
+
         if (response.data.message === "Project added successfully") {
+          const allNavLinks = document.querySelectorAll(".nav-link");
+          allNavLinks.forEach((link) => link.classList.remove("active"));
+          document.getElementById("projects")!.classList.add("active");
+          document.getElementById("projects")!.classList.add("bg-hj");
           root.render(<My_proj />);
         } else {
           document.getElementById("mess-text")!.innerHTML =
@@ -56,7 +70,18 @@ function Plus() {
         }
         // Gestisci la risposta qui se necessario
       } catch (error: any) {
-        document.getElementById("mess-text")!.innerHTML = error.data.messagge;
+        if (error.message === "Compila tutti i campi obbligatori")
+          document.getElementById("mess-text")!.innerHTML =
+            "Compila tutti i campi obbligatori";
+        else if (
+          error.message ===
+          "La data di fine progetto non può essere precedente a quella di inizio"
+        )
+          document.getElementById("mess-text")!.innerHTML =
+            "La data di fine progetto non può essere precedente a quella di inizio";
+        else
+          document.getElementById("mess-text")!.innerHTML =
+            "Qualcosa è andato storto";
 
         document.getElementById("toast")!.classList.add("show");
       }
@@ -76,10 +101,11 @@ function Plus() {
       ) : (
         <>
           <div
-            className="toast position-relative top-0 start-50 translate-middle-x text-bg-danger"
+            className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
             aria-live="assertive"
             aria-atomic="true"
             id="toast"
+            style={{ zIndex: 1010, top: 65 }}
           >
             <div className="d-flex">
               <div className="toast-body" id="mess-text">
@@ -95,7 +121,7 @@ function Plus() {
             </div>
           </div>
           <div className="jj" style={{ paddingTop: 15 }}>
-            <form className="row g-3" onSubmit={crea_pj}>
+            <div className="row g-3">
               <div className="col-12">
                 <label htmlFor="nomeProgetto" className="form-label">
                   Nome del Progetto
@@ -143,6 +169,18 @@ function Plus() {
                   onChange={(e) => setEnd_date(new Date(e.target.value))}
                 />
               </div>
+              <div className="col-12">
+                <label htmlFor="inputFile" className="form-label">
+                  Seleziona le immagini da caricare (non obbligatorio)
+                </label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="inputFile"
+                  onChange={handleFileChange}
+                  multiple
+                />
+              </div>
               <div className="col-md-6">
                 <label htmlFor="inputState" className="form-label">
                   Categoria
@@ -177,11 +215,11 @@ function Plus() {
               </div>
 
               <div className="col-12 justify-content-center d-flex">
-                <button className="btn bg-color-mod white " type="submit">
+                <button className="btn bg-color-mod white " onClick={crea_pj}>
                   Crea
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </>
       )}

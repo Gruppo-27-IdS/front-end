@@ -12,8 +12,9 @@ import Profile from "../User/profile";
 import { reload } from "../User/login";
 import Cookies from "js-cookie";
 import { set } from "mongoose";
-import { baseUrl, rootTopBar } from "../../main";
+import { baseUrl, baseUrlImg, rootTopBar } from "../../main";
 import TopBar2 from "../top-bar2";
+import { closeC } from "../User/create_profile";
 let apiUrl = "get_news_followed";
 let apiUrl1 = "add_or_remove_like";
 let apiUrl2 = "add_comment_news";
@@ -82,13 +83,12 @@ function Home() {
             },
           }
         );
-        console.log(response1.data.message);
         setComment("");
         reload_news();
-        // Process the response data here
       } catch (error) {
-        // Handle error here
-        console.error(error);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -113,7 +113,7 @@ function Home() {
             },
           }
         );
-        console.log(response1.data.message);
+
         if (pathElement) {
           if (response1.data.message === "Like removed successfully") {
             pathElement.setAttribute(
@@ -133,11 +133,10 @@ function Home() {
             ).toString();
           }
         }
-        console.log(item.likes.length);
-        // Process the response data here
       } catch (error) {
-        // Handle error here
-        console.error(error);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -157,12 +156,11 @@ function Home() {
         );
         setT(response.data);
         setLoading(false);
-        console.log(response.data);
-        // Process the response data here
       } catch (error) {
-        // Handle error here
         setLoading(false);
-        console.error(error);
+        document.getElementById("mess-text")!.innerHTML =
+          "Qualcosa è andato storto nel recupero delle news";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
 
@@ -192,6 +190,26 @@ function Home() {
         </div>
       ) : (
         <>
+          <div
+            className="toast position-fixed  start-50 translate-middle-x text-bg-danger "
+            aria-live="assertive"
+            aria-atomic="true"
+            id="toast"
+            style={{ zIndex: 1010, top: 65 }}
+          >
+            <div className="d-flex">
+              <div className="toast-body" id="mess-text">
+                Errore
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+                onClick={closeC}
+              ></button>
+            </div>
+          </div>
           {loading ? (
             <div className="text-center" style={{ marginTop: 80 }}>
               <div className="spinner-border color-mod" role="status">
@@ -210,11 +228,12 @@ function Home() {
               {t.map((item) => (
                 <div className="card news" key={item._id}>
                   <div className="card-body">
-                    <p className="news-title">
+                    <p className="news-title" style={{ fontSize: 25 }}>
                       <b>{item.title}</b>
                     </p>
                     <p
                       className="pro-tg"
+                      style={{ fontSize: 13 }}
                       onClick={() => expand_proj(item.project_id, <Home />)}
                     >
                       @{item.project_name}
@@ -223,29 +242,34 @@ function Home() {
                       {new Date(item.publish_date).toLocaleDateString("it-IT")}
                     </p>
 
-                    <p className="news-text ">{item.description}</p>
+                    <p className="news-text" style={{ fontSize: 20 }}>
+                      {item.description}
+                    </p>
                     <p
                       className="ut-tg"
+                      style={{ fontSize: 13 }}
                       onClick={() => show_profile(item.author_id, <Home />)}
                     >
                       @{item.author}
                     </p>
                   </div>
-                  {/*<div
-                className={
-                  item.g_news.length === 0 ? "" : "image-scroll-container"
-                }
-              >
-                {item.g_news.map((x) => (
-                  <img
-                    src={x}
-                    className="card-img-top k"
-                    height="250px"
-                    alt="..."
-                    key={x}
-                  />
-                ))}
-                </div>*/}
+                  <div
+                    className={
+                      item.attachments?.length === 0
+                        ? ""
+                        : "image-scroll-container"
+                    }
+                  >
+                    {item.attachments?.map((x) => (
+                      <img
+                        src={baseUrlImg + x}
+                        className="card-img-top k"
+                        height="250px"
+                        alt="..."
+                        key={item.attachments.indexOf(x)}
+                      />
+                    ))}
+                  </div>
                   <div className="interazioni">
                     <div className="interazioni-item">
                       <svg
@@ -329,10 +353,11 @@ function Home() {
                         ))}
                       </ul>
                     </div>
-                    <form className="offcanvas-header sticky-bottom col-12">
+                    <div className="offcanvas-header sticky-bottom col-12">
                       <input
                         type="text"
                         className=" form-control"
+                        id={item._id}
                         onChange={(e) => setComment(e.target.value)}
                       />
                       <button
@@ -352,7 +377,7 @@ function Home() {
                           <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
                         </svg>
                       </button>
-                    </form>
+                    </div>
                   </div>
                 </div>
               ))}

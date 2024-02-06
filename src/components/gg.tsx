@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { show_profile } from "../logica/funzioni";
+import { alert_butt, show_profile } from "../logica/funzioni";
 import { baseUrl, baseUrlImg, root } from "../main";
 import Crea_news from "../pagine/News/crea_news";
 import MyComponent, { proj, user } from "./dettagli_proj";
@@ -9,6 +9,7 @@ import ManagerButton from "./manager_menu";
 import Supporta from "./supporta";
 import { useEffect } from "react";
 import axios from "axios";
+import { closeC } from "../pagine/User/create_profile";
 interface CompInt {
   livello: number;
   comp: JSX.Element;
@@ -20,6 +21,26 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
   history.pushState({ page: "comp" }, "", "/progetto");
   return (
     <>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Hello, world! This is a toast message.
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
       <button
         type="button"
         className="btn-close p-10"
@@ -58,14 +79,17 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
                   />
                 ))}
               </div>
-              <p className="news-text" style={{ paddingTop: 10 }}>
+              <p className="news-text" style={{ paddingTop: 10, fontSize: 18 }}>
                 Data di inizio progetto:{" "}
                 {new Date(project.start_date).toLocaleDateString("it-IT")}
               </p>
               {new Date(project.end_date) < new Date(project.start_date) ? (
                 <></>
               ) : (
-                <p className="news-text" style={{ paddingTop: 10 }}>
+                <p
+                  className="news-text"
+                  style={{ paddingTop: 10, fontSize: 18 }}
+                >
                   Data di fine progetto:{" "}
                   {new Date(project.end_date).toLocaleDateString("it-IT")}
                 </p>
@@ -79,6 +103,7 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
                     <MyComponent parametroNumero={project._id} comp={comp} />
                   )
                 }
+                style={{ fontSize: 16 }}
               >
                 Creato da: @{project.user.username}
               </p>
@@ -138,6 +163,7 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
                             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
                             href="#"
                             role="button"
+                            onClick={alert_butt}
                           >
                             <b>Collabora</b>
                           </a>
@@ -172,6 +198,7 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
                             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
                             href="#"
                             role="button"
+                            onClick={alert_butt}
                           >
                             <b>Modifica News</b>
                           </a>

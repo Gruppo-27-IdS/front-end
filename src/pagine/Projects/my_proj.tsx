@@ -6,6 +6,7 @@ import { reload } from "../User/login";
 import { baseUrl, baseUrlImg } from "../../main";
 import { set } from "mongoose";
 import { proj } from "../../components/dettagli_proj";
+import { closeC } from "../User/create_profile";
 const apiUrl = "get_proj_created";
 
 function My_proj() {
@@ -28,16 +29,18 @@ function My_proj() {
             },
           }
         );
-        console.log(response);
-        console.log(utente._id);
+
         setLoading(false);
         setProjects(response.data);
       } catch (error: any) {
         setLoading(false);
-        console.error(
-          "Errore durante il recupero dei progetti:",
-          error.message
-        );
+        if (Cookies.get("authToken")) {
+          document.getElementById("mess-text")!.innerHTML =
+            "Errore durante il recupero dei progetti";
+          document.getElementById("toast")!.classList.add("show");
+          document.getElementById("messaggioVuoto")!.innerHTML =
+            "Errore nel recupero delle informazioni dei progetti<br>Error code: 500";
+        }
       }
     };
 
@@ -55,6 +58,26 @@ function My_proj() {
         </div>
       ) : (
         <>
+          <div
+            className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+            aria-live="assertive"
+            aria-atomic="true"
+            id="toast"
+            style={{ zIndex: 1010, top: 65 }}
+          >
+            <div className="d-flex">
+              <div className="toast-body" id="mess-text">
+                Errore
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+                onClick={closeC}
+              ></button>
+            </div>
+          </div>
           {loading ? (
             <div className="text-center" style={{ marginTop: 80 }}>
               <div className="spinner-border color-mod" role="status">
@@ -64,7 +87,10 @@ function My_proj() {
           ) : (
             <>
               {lista_tuoi_progetti.length === 0 ? (
-                <p style={{ textAlign: "center", paddingTop: 15 }}>
+                <p
+                  style={{ textAlign: "center", paddingTop: 15 }}
+                  id="messaggioVuoto"
+                >
                   Qui puoi vedere i progetti che hai creato!
                   <br />
                   Crea un nuovo progetto per iniziare!
@@ -77,40 +103,41 @@ function My_proj() {
                 style={{ paddingTop: 5 }}
               >
                 {lista_tuoi_progetti.map((item) => (
-                  <>
-                    <div className="col" key={item._id}>
-                      <div
-                        className="card mb-3 h-100"
-                        onClick={() => expand_proj(item._id, <My_proj />)}
-                      >
-                        {item.images.length > 0 ? (
-                          <img
-                            src={baseUrlImg + item.images[0]}
-                            className="card-img-top"
-                            alt=""
-                          />
-                        ) : (
-                          <></>
-                        )}
-                        <div className="card-body">
-                          <h5 className="card-title" style={{ fontSize: 25 }}>
-                            {item.name}
-                          </h5>
-                          <p className="news-text" style={{ fontSize: 20 }}>
-                            {item.description}
-                          </p>
-                          <p className="news-text">
-                            <small
-                              className="text-body-secondary"
-                              style={{ fontSize: 15 }}
-                            >
-                              {item.category}
-                            </small>
-                          </p>
-                        </div>
+                  <div className="col" key={item._id}>
+                    <div
+                      className="card mb-3 h-100"
+                      onClick={() => expand_proj(item._id, <My_proj />)}
+                    >
+                      {item.images.length > 0 ? (
+                        <img
+                          src={baseUrlImg + item.images[0]}
+                          className="card-img-top"
+                          alt=""
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      <div className="card-body">
+                        <h5 className="card-title" style={{ fontSize: 25 }}>
+                          {item.name}
+                        </h5>
+                        <p
+                          className="news-text text-truncate"
+                          style={{ fontSize: 20 }}
+                        >
+                          {item.description}
+                        </p>
+                        <p className="news-text">
+                          <small
+                            className="text-body-secondary"
+                            style={{ fontSize: 15 }}
+                          >
+                            {item.category}
+                          </small>
+                        </p>
                       </div>
                     </div>
-                  </>
+                  </div>
                 ))}
               </div>
             </>
