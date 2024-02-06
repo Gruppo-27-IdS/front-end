@@ -10,11 +10,44 @@ import Supporta from "./supporta";
 import { useEffect } from "react";
 import axios from "axios";
 import { closeC } from "../pagine/User/create_profile";
+import Mod_News from "../pagine/News/mod_news";
 interface CompInt {
   livello: number;
   comp: JSX.Element;
   project: proj;
   collaboratori: user[];
+}
+function gigi() {
+  const element = document.getElementById("offcanvasBottom");
+
+  if (element) {
+    if (element.classList.contains("show")) {
+      element.classList.remove("show");
+    } else {
+      element.classList.add("show");
+    }
+  }
+}
+function gigi2() {
+  const element = document.getElementById("offcanvasBottom2");
+
+  if (element) {
+    if (element.classList.contains("show")) {
+      element.classList.remove("show");
+    } else {
+      element.classList.add("show");
+    }
+  }
+}
+function tony() {
+  const element = document.getElementById("offcanvasBottom2");
+  if (element) {
+    element.classList.remove("show");
+  }
+  document.getElementById("mess-text")!.innerHTML = "Richiesta inviata";
+  document.getElementById("toast")!.classList.remove("text-bg-danger");
+  document.getElementById("toast")!.classList.add("text-bg-success");
+  document.getElementById("toast")!.classList.add("show");
 }
 
 const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
@@ -163,7 +196,7 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
                             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
                             href="#"
                             role="button"
-                            onClick={alert_butt}
+                            onClick={gigi2}
                           >
                             <b>Collabora</b>
                           </a>
@@ -198,7 +231,21 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
                             className="btn bg-color-mod white btn-mod-2 d-flex justify-content-center"
                             href="#"
                             role="button"
-                            onClick={alert_butt}
+                            onClick={() =>
+                              root.render(
+                                <Mod_News
+                                  comp={
+                                    <Comp
+                                      comp={comp}
+                                      livello={livello}
+                                      project={project}
+                                      collaboratori={collaboratori}
+                                    />
+                                  }
+                                  id={project._id}
+                                />
+                              )
+                            }
                           >
                             <b>Modifica News</b>
                           </a>
@@ -215,6 +262,72 @@ const Comp: React.FC<CompInt> = ({ comp, livello, project, collaboratori }) => {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+        <div
+          className="offcanvas offcanvas-bottom"
+          tabIndex={-1}
+          id="offcanvasBottom"
+          aria-labelledby="offcanvasBottomLabel"
+          style={{ height: 300 }}
+        >
+          <div className="offcanvas-header">
+            <h5 className="offcanvas-title" id="offcanvasBottomLabel">
+              Richieste di collaborazione:
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+              onClick={gigi}
+            ></button>
+          </div>
+          <div className="offcanvas-body small" style={{ textAlign: "center" }}>
+            Non ci sono richieste
+          </div>
+        </div>
+        <div
+          className="offcanvas offcanvas-bottom"
+          tabIndex={-1}
+          id="offcanvasBottom2"
+          aria-labelledby="offcanvasBottomLabel"
+          style={{ height: 400 }}
+        >
+          <div className="offcanvas-header">
+            <h5 className="offcanvas-title" id="offcanvasBottomLabel">
+              Richiedi di collaborare:
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+              onClick={gigi2}
+            ></button>
+          </div>
+          <div className="offcanvas-body ">
+            <label htmlFor="inputDesc">Lettera motivazionale: </label>
+            <textarea
+              rows={4}
+              className="form-control"
+              id="inputDesc"
+            ></textarea>
+            <label htmlFor="inputFile" className="form-label">
+              Seleziona il tuo curriculum
+            </label>
+            <input type="file" className="form-control" id="inputFile" />
+            <div
+              className="col-12 d-flex justify-content-center"
+              style={{ marginTop: 15 }}
+            >
+              <button
+                className="btn bg-color-mod white "
+                onClick={() => tony()}
+              >
+                Invia
+              </button>
             </div>
           </div>
         </div>

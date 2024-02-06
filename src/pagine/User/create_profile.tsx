@@ -6,6 +6,7 @@ import { baseUrl, root } from "../../main";
 import Profile from "./profile";
 
 export function closeC() {
+  document.getElementById("toast")!.classList.add("text-bg-danger");
   document.getElementById("toast")!.classList.remove("show");
 }
 const apiUrl = "add_user";
@@ -180,7 +181,7 @@ function Create_profile() {
         </div>
         <div className="col-12">
           <label htmlFor="inputEmail" className="form-label">
-            Email
+            Email (collegata a Paypal se volete ricevere donazioni)
           </label>
           <input
             type="email"
