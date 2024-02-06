@@ -255,5 +255,8 @@ export const eliminaProgetto = (id: string) => {
       document.getElementById("toast")!.classList.add("show");
     }
   };
-  fetchData();
+  var x = window.confirm("Sei sicuro di voler eliminare il progetto?");
+  if (x) {
+    fetchData();
+  }
 };

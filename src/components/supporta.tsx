@@ -4,6 +4,7 @@ import { baseUrl, root } from "../main";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { utente } from "../logica/funzioni";
+import { closeC } from "../pagine/User/create_profile";
 export default function Supporta({
   proj,
   comp,
@@ -13,6 +14,7 @@ export default function Supporta({
 }) {
   const [qt, setQt] = React.useState(0);
   const [pag, setPag] = React.useState("Paypal");
+  const [paypalEmail, setPaypalEmail] = React.useState("");
   function controlQt(e: any) {
     setQt(e);
     if (e < 10) {
@@ -32,6 +34,11 @@ export default function Supporta({
       if (qt >= 10) {
         document.getElementById("pagamento")?.classList.remove("active");
         document.getElementById("conferma")?.classList.add("active");
+        if (paypalEmail === "") {
+          document.getElementById("inputEmail")?.classList.add("is-invalid");
+          document.getElementById("conferma")?.classList.remove("active");
+          document.getElementById("pagamento")?.classList.add("active");
+        }
       } else {
         document.getElementById("inputQt")?.classList.add("is-invalid");
       }
@@ -55,7 +62,7 @@ export default function Supporta({
             },
           }
         );
-        console.log(response.data);
+
         if (
           response.data.message ===
           "The user support a new project Successfully"
@@ -71,10 +78,12 @@ export default function Supporta({
             localStorage.setItem("user", JSON.stringify(userData));
           }
         }
-        alert("pagamento confermato");
+        alert("Pagamento inviato");
         root.render(comp);
       } catch (error) {
-        console.log(error);
+        document.getElementById("mess-text")!.innerHTML =
+          "Non è possibile effettuare il pagamento verso questo progetto. Riprova più tardi.";
+        document.getElementById("toast")!.classList.add("show");
       }
     };
     fetchData();
@@ -87,6 +96,26 @@ export default function Supporta({
         aria-label="Close"
         onClick={() => root.render(comp)}
       ></button>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger"
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Errore
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
       <div className="jj" style={{ paddingTop: 15 }}>
         <h2 className=" btn bg-color-mod white d-flex justify-content-center">
           <b>Supporta il progetto</b>
@@ -94,7 +123,7 @@ export default function Supporta({
         <div id="carouselExample" className="carousel slide">
           <div className="carousel-inner">
             <div className="carousel-item active" id="pagamento">
-              <form className="row g-3 " style={{ paddingTop: 15 }}>
+              <div className="row g-3 " style={{ paddingTop: 15 }}>
                 <div className="col-md-6 ">
                   <label htmlFor="inputName" className="form-label">
                     Quantità da donare (minimo 10 euro):
@@ -125,11 +154,20 @@ export default function Supporta({
                     required
                   >
                     <option value={"Paypal"}>Paypal</option>
-                    <option value={"Credit Card"}>Credit Card</option>
-                    {/* Add more options as needed */}
                   </select>
                 </div>
-
+                <div className="col-md-12 ">
+                  <label htmlFor="inputEmail" className="form-label">
+                    Indirizzo email PayPal:
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control "
+                    id="inputEmail"
+                    onChange={(e) => setPaypalEmail(e.target.value)}
+                    required
+                  />
+                </div>
                 <div className="col-12 d-flex justify-content-center">
                   <button
                     className="btn bg-color-mod white "
@@ -138,14 +176,15 @@ export default function Supporta({
                     Procedi
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
             <div className="carousel-item" id="conferma">
               <h2 style={{ textAlign: "center" }}>Riepilogo</h2>
               <div className="centro-piccolo">
                 <p>importo: {qt} €</p>
                 <p>metodo: {pag}</p>
-                <p>progetto: {proj.name}</p>
+                <p>email: {paypalEmail}</p>
+                <p>progetto finanziato: {proj.name}</p>
                 <p>
                   manager: {proj.user.name} {proj.user.surname}
                 </p>

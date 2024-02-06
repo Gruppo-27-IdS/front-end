@@ -180,7 +180,7 @@ function Create_profile() {
         </div>
         <div className="col-12">
           <label htmlFor="inputEmail" className="form-label">
-            Email
+            Email (collegata a Paypal se volete ricevere donazioni)
           </label>
           <input
             type="email"

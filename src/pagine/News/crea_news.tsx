@@ -3,6 +3,7 @@ import { utente } from "../../logica/funzioni";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { baseUrl, root } from "../../main";
+import { closeC } from "../User/create_profile";
 const apiUrl = "add_news";
 interface CreaNewsProps {
   inputString: string;
@@ -17,6 +18,9 @@ const Crea_news: React.FC<CreaNewsProps> = ({ inputString, comp }) => {
   const crea_news = () => {
     async function fetchData() {
       try {
+        if (title === "" || description === "") {
+          throw { message: "Compila tutti i campi obbligatori" };
+        }
         const response = await axios.post(
           baseUrl + apiUrl,
           {
@@ -32,11 +36,15 @@ const Crea_news: React.FC<CreaNewsProps> = ({ inputString, comp }) => {
             },
           }
         );
-        console.log(response.data);
+
         root.render(comp);
-        // Gestisci la risposta qui se necessario
-      } catch (error) {
-        console.error("Errore durante la richiesta:", error);
+      } catch (error: any) {
+        if (error.message === "Compila tutti i campi obbligatori") {
+          document.getElementById("mess-text")!.innerHTML = error.message;
+        }
+        document.getElementById("toast")!.innerHTML =
+          "Qualcosa è andato storto";
+        document.getElementById("toast")!.classList.add("show");
       }
     }
     fetchData();
@@ -50,7 +58,27 @@ const Crea_news: React.FC<CreaNewsProps> = ({ inputString, comp }) => {
         aria-label="Close"
         onClick={() => root.render(comp)}
       ></button>
-      <form className="row g-3 jj" style={{ paddingTop: 15 }}>
+      <div
+        className="toast position-fixed  start-50 translate-middle-x text-bg-danger "
+        aria-live="assertive"
+        aria-atomic="true"
+        id="toast"
+        style={{ zIndex: 1010, top: 65 }}
+      >
+        <div className="d-flex">
+          <div className="toast-body" id="mess-text">
+            Errore
+          </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={closeC}
+          ></button>
+        </div>
+      </div>
+      <div className="row g-3 jj" style={{ paddingTop: 15 }}>
         <label htmlFor="nomeProgetto" className="form-label">
           Titolo
         </label>
@@ -76,7 +104,7 @@ const Crea_news: React.FC<CreaNewsProps> = ({ inputString, comp }) => {
             Crea news
           </button>{" "}
         </div>
-      </form>
+      </div>
     </>
   );
 };
