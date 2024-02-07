@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import Crea_news from "../pagine/News/crea_news";
 import Comp from "./gg";
 import { baseUrl } from "../main";
-import TopBar from "../pagine/top-bar";
+import TopBar from "./top-bar";
 import { closeC } from "../pagine/User/create_profile";
 import { set } from "mongoose";
 const apiUrl = "get_proj_by_id";

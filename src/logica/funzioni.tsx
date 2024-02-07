@@ -11,7 +11,7 @@ import MyComponent from "../components/dettagli_proj";
 import Dettagli_prof from "../pagine/User/dettagli_prof";
 import Cookies from "js-cookie";
 import axios from "axios";
-import TopBar from "../pagine/top-bar";
+import TopBar from "../components/top-bar";
 
 //creo la classe delle news
 export class News {

@@ -5,7 +5,7 @@ import {
   Project,
   utente,
 } from "../../logica/funzioni";
-import TopBar from "../top-bar";
+import TopBar from "../../components/top-bar";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { baseUrl, baseUrlImg } from "../../main";
