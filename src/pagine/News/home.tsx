@@ -62,7 +62,7 @@ function gigi() {
   }
 }
 function Home() {
-  history.pushState({ page: "home" }, "", "/home");
+  history.pushState({ page: "home" }, "", "front-end/home");
   rootTopBar.render(<TopBar2 />);
   const [loading, setLoading] = useState(true);
   const [t, setT] = useState<News[]>([]);

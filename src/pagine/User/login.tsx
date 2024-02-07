@@ -64,8 +64,8 @@ function Login() {
           setIsLoggedIn(true);
         }
       } catch (error: any) {
-        document.getElementById("mess-text")!.innerHTML =
-          error.response.data.message;
+        console.log(error);
+        document.getElementById("mess-text")!.innerHTML = error;
         document.getElementById("toast")!.classList.add("show");
       }
     };
@@ -74,10 +74,6 @@ function Login() {
 
   useEffect(() => {
     reload();
-    const sessionTimeout = setTimeout(() => {
-      logout();
-    }, 24 * 60 * 60 * 1000);
-    return () => clearTimeout(sessionTimeout);
   }, []);
 
   if (isLoggedIn) {

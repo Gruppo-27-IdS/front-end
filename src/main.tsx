@@ -5,10 +5,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import BottomNav from "./components/bot-nav";
 import TopBar from "./components/top-bar";
 
-export const baseUrl =
-  "https://you-project-backend-3fc4476a9bed.herokuapp.com/api/";
-export const baseUrlImg =
-  "https://you-project-backend-3fc4476a9bed.herokuapp.com/";
+export const baseUrl = "http://localhost:5000/api/";
+export const baseUrlImg = "http://localhost:5000/";
 export const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
